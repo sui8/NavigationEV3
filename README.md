@@ -43,7 +43,7 @@ v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 - [x] **v1.11.1** アイコン追加、一部画像パス指定定数定義作成、コード簡略化 (Icon addition, partial image path specification constant definition creation, code simplification)
 - [x] **v1.12.0** Config.iniから設定を読み込む機能実装<文字型取得と存在しない時に問題あり> (Functional implementation to read the settings from Config.ini <There is a problem when there is no character type acquisition>)
 - [x] **v1.12.1** コート画像選択式の準備<存在しないときにエラー発生中> (Preparation of coat image selection formula <error occurs when it does not exist>)
-- [] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能>
-- [] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定>
-- [] **v1.12.4** Config.iniから設定を読み込む機能修正<文字型対応>
-- [] **v1.12.5** Config.iniの設定ミスの際、デフォルトに戻す
+- [ ] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能>
+- [ ] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定>
+- [ ] **v1.12.4** Config.iniから設定を読み込む機能修正<文字型対応>
+- [ ] **v1.12.5** Config.iniの設定ミスの際、デフォルトに戻す
