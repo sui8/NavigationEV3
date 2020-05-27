@@ -1,5 +1,5 @@
 # NavigationEV3
-#(English)
+# (English)
 NavigationEV3 helps control EV3. In addition, it is possible to control other robots by changing the parameters.
 
 What Can I do?
@@ -9,7 +9,7 @@ The sophisticated GUI allows you to intuitively place robots and control the EV3
 Main language and environment
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 
-#(Japanese)
+# (Japanese)
 NavigationEV3を使用すると、簡単にEV3を制御することが可能です。
 
 どのように使用するか
