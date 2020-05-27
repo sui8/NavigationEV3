@@ -34,7 +34,7 @@ v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 - [x] **v1.4.0** 大幅な機能追加4 (Substantial function addition 4)
 - [x] **v1.5.0** 大幅な機能追加5 (Substantial function addition 5)
 - [x] **v1.6.0** 大幅な機能追加6 (Substantial function addition 6)
-- [x] **v1.7.0**コントロールパネルの更新 (Control panel updates)
+- [x] **v1.7.0** コントロールパネルの更新 (Control panel updates)
 - [x] **v1.8.0** ロボット画像変更、高精度化 (Robot image change, high precision)
 - [x] **v1.9.0** 保存・タイヤ径など大幅変更 (Save and change tire diameter etc.)
 - [x] **v1.9.1** Spinbox修正 (Spinbox fix)
@@ -48,5 +48,6 @@ v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 - [x] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能・Configに移行？>
 - [x] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定>
 - [x] **v1.13.0** .ncpパッケージ仮対応、データをドキュメントフォルダ格納式に変更
+- [ ] **v1.13.1** Version表示方式削除、Helpタブへの移行<ボタンは未作成>
 - [ ] **v1.13.1** .ncp解凍機能追加
 - [ ] **v1.14.0** .ncpパッケージ対応（解凍など全て）、Config.ini設定を読み込む機能修正<文字型対応>、Config.iniの設定ミスの際、デフォルトに戻す（カラー、フォント含め）、項目などの損失修正、ncp重複・破損修復設定、拡大縮小設定
