@@ -11,7 +11,16 @@ v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 
 
-# 機能一覧
+# List of Functions
+・ Automatically calculates the distance and angle just by placing the robot  
+・ Robot rotation, deletion (all deletion), position adjustment possible  
+・ Robot tire diameter can be changed  
+・ Text file output of distance and angle  
+・ Saving robot position in .ngd (Navigation Data) format  
+・ Reading .ngd file and restoring court status  
+・ Coat information can be read in .ncp (Navigation Cort Pack) format Add, delete, change, and list packs on the Cort Pack management screen  
+・ Settings can be changed using Config  
+・ Visual operation with control panel  
 
 
 # (Japanese)
