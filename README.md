@@ -11,7 +11,7 @@ v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 
 
-# List of Functions
+## List of Functions
 ・ Automatically calculates the distance and angle just by placing the robot  
 ・ Robot rotation, deletion (all deletion), position adjustment possible  
 ・ Robot tire diameter can be changed  
@@ -34,7 +34,7 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 
-# 機能一覧
+## 機能一覧
 ・ロボットを配置するだけで自動で距離と角度を算出  
 ・ロボット回転、削除（全削除）、位置調整可能  
 ・ロボットタイヤ径変更可能  
