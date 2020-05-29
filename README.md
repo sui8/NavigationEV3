@@ -11,6 +11,9 @@ v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 
 
+# 機能一覧
+
+
 # (Japanese)
 NavigationEV3を使用すると、簡単にEV3を制御することが可能です。
 
@@ -21,6 +24,18 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 ### メインの開発言語・環境  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
+
+# 機能一覧
+・ロボットを配置するだけで自動で距離と角度を算出  
+・ロボット回転、削除（全削除）、位置調整可能  
+・ロボットタイヤ径変更可能  
+・距離と角度のテキストファイル出力  
+・.ngd（Navigation Data）形式でロボットの位置保存  
+・.ngdファイルの読み込みとコート状態復元  
+・.ncp（Navigation Cort Pack）形式でコート情報読み込み可能  
+・Cort Pack管理画面でパックの追加、削除、変更、一覧  
+・Configを使用し設定変更可能  
+・コントロールパネルで視覚的な操作  
 
 
 # Change Logs (変更点)  
