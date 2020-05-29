@@ -23,7 +23,7 @@ v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 ・ Visual operation with control panel  
 
 
-# (Japanese)
+# (日本語)
 NavigationEV3を使用すると、簡単にEV3を制御することが可能です。
 
 ### どのように使用するか  
