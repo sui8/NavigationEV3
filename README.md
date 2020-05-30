@@ -4,11 +4,11 @@ NavigationEV3 helps control EV3. In addition, it is possible to control other ro
 
 ### What Can I do?  
 The sophisticated GUI allows you to intuitively place robots and control the EV3.  
-!!THIS SOFTWARE AND CODE IS NOT DISTRIBUTED TO THE PUBLIC!!
+!!THIS SOFTWARE OR SOURCE CODE WILL NOT BE DISTRIBUTED TO THE GENERAL PUBLIC FREE OF CHARGE IN ANY CASE. CONTACT ME TO PURCHASE FOR A FEE (CONDITIONALLY). WE ALSO ACCEPT DONATIONS!!
 
 ### Main language and environment  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
-v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
+v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)
 
 
 ## List of Functions
@@ -28,11 +28,11 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 
 ### どのように使用するか  
 洗練されたGUIで、直感的にロボットを配置。たったそれだけで距離と角度が自動算出されます。これをEV3に送信することで、簡単にロボットを操作。  
-注意！ このソフトウェア又はソースコードはいかなる場合があろうと一般配布されません！
+注意！ このソフトウェア又はソースコードはいかなる場合があろうと無償一般配布されません。私に問い合わせていただくと、有償にて（条件付き）購入することが可能です。寄付も受け付けております。
 
 ### メインの開発言語・環境  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
-v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
+v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)
 
 ## 機能一覧
 ・ロボットを配置するだけで自動で距離と角度を算出  
@@ -49,8 +49,10 @@ v1.12.0~ Python 3.8.3 (Windows 10 Pro,ver1909)
 
 # Change Logs (変更点)  
 ### 説明
-- [ ] 計画中のバージョン - [x] 実装済みバージョン
+- [ ] 計画中のバージョン
+- [x] 実装済みバージョン
 
+### バージョン履歴
 - [x] **v1.0.0** Release (リリース)
 - [x] **v1.1.0** 大幅な機能追加1 (Substantial function addition 1)
 - [x] **v1.2.0** 大幅な機能追加2 (Substantial function addition 2)
