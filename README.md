@@ -36,6 +36,23 @@ v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
 v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
+### 動作環境  
+#### 最低スペック  
+Windows 10 32Bit Ver10.0  
+（ソースコードからの実行時）Python 3.7  
+CPU: Intel Core i5 5th Gen  
+RAM: 4GB  
+HDD空き容量: 2GB  
+
+#### 推奨スペック  
+Windows 10 64Bit Ver2004
+（ソースコードからの実行時）Python 3.8
+CPU: Intel i7 8th Gen  
+RAM: 8GB  
+HDD空き容量: 20GB  
+SSD空き容量: 15GB  
+
+
 ## 機能一覧
 ・ロボットを配置するだけで自動で距離と角度を算出  
 ・ロボット回転、削除（全削除）、位置調整可能  
