@@ -54,7 +54,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
 ## 動作環境  
 ### 最低スペック  
-Windows 8.1 32Bit
+Windows 8.1 32Bit  
 1280x720 ドットの解像度  
 （ソースコードからの実行時）Python 3.7  
 CPU: PAE、NX、および SSE2 を サポートする、1 GHz 以上  
