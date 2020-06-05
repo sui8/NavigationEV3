@@ -13,19 +13,20 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
 ## Operating environment    
 ### Minimum specs  
-Windows 10 32Bit Ver10.0  
+Windows 8.1 32Bit  
+1280x720 dot resolution  
 (When running from source code) Python 3.7  
-CPU: Intel Core i5 5th Gen 
-RAM: 4GB  
-HDD free space: 2GB  
+CPU: PAE, NX, and SSE2 support, 1 GHz and above  
+RAM: 2GB  
+HDD free space: 1GB  
 
 ### Recommended specs  
 Windows 10 64Bit Ver2004  
+1920x1080 dot resolution  
 (When running from source code) Python 3.8  
-CPU: Intel i7 8th Gen  
+CPU: 2 GHz or higher, supporting PAE, NX, and SSE2  
 RAM: 8GB  
-HDD free space: 20GB  
-SSD free space: 15GB  
+HDD/SSD free space: 10GB  
 
 ## List of Functions
 ・ Automatically calculates the distance and angle just by placing the robot  
@@ -53,19 +54,20 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
 ## 動作環境  
 ### 最低スペック  
-Windows 10 32Bit Ver10.0  
+Windows 8.1 32Bit
+1280x720 ドットの解像度  
 （ソースコードからの実行時）Python 3.7  
-CPU: Intel Core i5 5th Gen  
-RAM: 4GB  
-HDD空き容量: 2GB  
+CPU: PAE、NX、および SSE2 を サポートする、1 GHz 以上  
+RAM: 2GB  
+HDD空き容量: 1GB  
 
 ### 推奨スペック  
 Windows 10 64Bit Ver2004
-（ソースコードからの実行時）Python 3.8
-CPU: Intel i7 8th Gen  
+1920x1080 ドットの解像度  
+（ソースコードからの実行時）Python 3.8  
+CPU: PAE、NX、および SSE2 を サポートする、2 GHz 以上  
 RAM: 8GB  
-HDD空き容量: 20GB  
-SSD空き容量: 15GB  
+HDD・SSD空き容量: 10GB  
 
 
 ## 機能一覧
