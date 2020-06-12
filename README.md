@@ -68,6 +68,7 @@ Windows 10 64Bit Ver2004
 CPU: PAE、NX、および SSE2 を サポートする、2 GHz 以上  
 RAM: 8GB  
 HDD・SSD空き容量: 10GB  
+＊Python 3.9には未対応
 
 
 ## 機能一覧
