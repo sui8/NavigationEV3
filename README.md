@@ -9,8 +9,7 @@ The sophisticated GUI allows you to intuitively place robots and control the EV3
 ### Main language and environment  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
-v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
-v2.2.0~ Python 3.9.0b3 (Windows 10 Pro,ver2004)
+v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
 ## Operating environment    
 ### Minimum specs  
@@ -51,8 +50,7 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 ### メインの開発言語・環境  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
-v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
-v2.2.0~ Python 3.9.0b3 (Windows 10 Pro,ver2004)
+v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 
 ## 動作環境  
 ### 最低スペック  
@@ -126,3 +124,4 @@ HDD・SSD空き容量: 10GB
 - [x] **v2.1.2** 旧方式の変数を新方式へ移行
 - [ ] **v2.2.0** ncp破損修復設定、拡大縮小設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
 - [ ] **v2.3.0** パック破損時の自動削除
+- [ ] **v2.4.0** Python 3.9対応
