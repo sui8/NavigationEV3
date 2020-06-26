@@ -90,7 +90,7 @@ HDD・SSD空き容量: 10GB
 - [x] 実装済みバージョン
 
 ### バージョン履歴
-- [x] **v1.0.0** Release (リリース)
+- [x] **v1.0.0** リリース (Release)
 - [x] **v1.1.0** 大幅な機能追加1 (Substantial function addition 1)
 - [x] **v1.2.0** 大幅な機能追加2 (Substantial function addition 2)
 - [x] **v1.3.0** 大幅な機能追加3 (Substantial function addition 3)
@@ -109,9 +109,9 @@ HDD・SSD空き容量: 10GB
 - [x] **v1.11.1** アイコン追加、一部画像パス指定定数定義作成、コード簡略化 (Icon addition, partial image path specification constant definition creation, code simplification)
 - [x] **v1.12.0** Config.iniから設定を読み込む機能実装<文字型取得と存在しない時に問題あり> (Functional implementation to read the settings from Config.ini <There is a problem when there is no character type acquisition>)
 - [x] **v1.12.1** コート画像選択式の準備<存在しないときにエラー発生中> (Preparation of coat image selection formula <error occurs when it does not exist>)
-- [x] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能・Configに移行？>
-- [x] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定>
-- [x] **v1.13.0** .ncpパッケージ仮対応、データをドキュメントフォルダ格納式に変更
+- [x] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能・Configに移行？> (It is possible to select whether to display the version in the window settings <Only within Debug ・Move to Config? >)
+- [x] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定> (Replace the default image when the coat image does not exist.)
+- [x] **v1.13.0** .ncpパッケージ仮対応、データをドキュメントフォルダ格納式に変更 (英語版バージョン履歴廃止/English version history abolished)
 - [x] **v1.14.0** .ncpパッケージ対応<解凍・重複防止など>
 - [x] **v1.14.1** .ncpの解凍システムのミス修正<重複防止含む>
 - [x] **v1.15.0** .ncpパッケージ管理タブ作成<変更・削除・一覧機能追加予定>
