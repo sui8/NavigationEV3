@@ -14,7 +14,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 ## Operating environment    
 ### Minimum specs  
 Windows 8.1 32Bit  
-1280x720 dot resolution  
+800x600 dot resolution  
 (When running from source code) Python 3.7  
 CPU: PAE, NX, and SSE2 support, 1 GHz and above  
 RAM: 2GB  
@@ -55,7 +55,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 ## 動作環境  
 ### 最低スペック  
 Windows 8.1 32Bit  
-1280x720 ドットの解像度  
+800x600 ドットの解像度  
 （ソースコードからの実行時）Python 3.7  
 CPU: PAE、NX、および SSE2 を サポートする、1 GHz 以上  
 RAM: 2GB  
