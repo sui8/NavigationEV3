@@ -14,7 +14,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 ## Operating environment    
 ### Minimum specs  
 Windows 8.1 32Bit  
-1280x720 dot resolution  
+1280x720 dot resolution (16:9 recommended)  
 (When running from source code) Python 3.7  
 CPU: PAE, NX, and SSE2 support, 1 GHz and above  
 RAM: 2GB  
@@ -63,7 +63,7 @@ HDD空き容量: 1GB
 
 ### 推奨スペック  
 Windows 10 64Bit Ver2004  
-1920x1080 ドットの解像度  
+1920x1080 ドットの解像度（16:9推奨）  
 （ソースコードからの実行時）Python 3.8  
 CPU: PAE、NX、および SSE2 を サポートする、2 GHz 以上  
 RAM: 8GB  
