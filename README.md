@@ -9,7 +9,8 @@ The sophisticated GUI allows you to intuitively place robots and control the EV3
 ### Main language and environment  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
-v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
+v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
+v2.1.4~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)
 
 ## Operating environment    
 ### Minimum specs  
@@ -50,7 +51,8 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 ### メインの開発言語・環境  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
-v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
+v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
+v2.1.4~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)
 
 ## 動作環境  
 ### 最低スペック  
@@ -124,12 +126,13 @@ HDD・SSD空き容量: 10GB
 - [x] **v2.1.1** コート描画始点位置変更（安定して綺麗に描画できるようになる）
 - [x] **v2.1.2** 旧方式の変数を新方式へ移行
 - [x] **v2.1.3** パス関係コード短縮化
-- [ ] **v2.2.0** 拡大機能廃止、縮小機能の更新
-- [ ] **v2.3.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
-- [ ] **v2.4.0** パック破損時の自動削除
-- [ ] **v2.5.0** Python 3.9対応
-- [ ] **v3.0.0** Pythonファイル（.py）でのプログラム出力機能追加
-- [ ] **v4.0.0** 本ソフトからev3devへのプログラム転送と権限付与
-- [ ] **v5.0.0** 簡易的なライントレース対応
-- [ ] **v6.0.0** 滑らかな曲線対応
-- [ ] **v7.0.0** バグ修正、コード簡略化、追加機能完成、NavigationEV3開発終了
+- [x] **v2.1.4** 不要なコードの削除
+- [ ] **v3.0.0** 拡大機能廃止、縮小機能の更新、複数画面解像度対応、ボタンレイアウト変更、オプション変更
+- [ ] **v3.1.0** Python 3.9対応
+- [ ] **v3.2.0** パック破損時の自動削除
+- [ ] **v3.3.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
+- [ ] **v4.0.0** Pythonファイル（.py）でのプログラム出力機能追加
+- [ ] **v5.0.0** 本ソフトからev3devへのプログラム転送と権限付与
+- [ ] **v6.0.0** 簡易的なライントレース対応
+- [ ] **v7.0.0** 滑らかな曲線対応
+- [ ] **v8.0.0** バグ修正、コード簡略化、追加機能完成、NavigationEV3開発終了
