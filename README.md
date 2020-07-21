@@ -10,8 +10,9 @@ The sophisticated GUI allows you to intuitively place robots and control the EV3
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
 v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
-v2.1.4~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
-v2.1.5~ Python 3.8.4 (Windows 10 Pro, ver2004)
+v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
+v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
+v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
 
 ## Operating environment    
 ### Minimum specs  
@@ -53,8 +54,9 @@ NavigationEV3を使用すると、簡単にEV3を制御することが可能で�
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
 v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
 v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
-v2.1.4~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
-v2.1.5~ Python 3.8.4 (Windows 10 Pro, ver2004)
+v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
+v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
+v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
 
 ## 動作環境  
 ### 最低スペック  
