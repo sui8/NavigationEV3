@@ -13,6 +13,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
+v2.3.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
 
 ## Operating environment    
 ### Minimum specs  
@@ -57,6 +58,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
+v2.3.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
 
 ## 動作環境  
 ### 最低スペック  
