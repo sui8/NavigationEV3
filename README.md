@@ -65,7 +65,7 @@ v2.3.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
 Windows 8.1 32Bit  
 1280x720 ドットの解像度  
 （ソースコードからの実行時）Python 3.7  
-CPU: PAE、NX、および SSE2 を サポートする、1 GHz 以上  
+CPU: PAE、NX、およびSSE2をサポートする1 GHz以上  
 RAM: 2GB  
 HDD空き容量: 1GB  
 
@@ -73,7 +73,7 @@ HDD空き容量: 1GB
 Windows 10 64Bit Ver2004  
 1920x1080 ドットの解像度（16:9推奨）  
 （ソースコードからの実行時）Python 3.8  
-CPU: PAE、NX、および SSE2 を サポートする、2 GHz 以上  
+CPU: PAE、NX、およびSSE2をサポートする2 GHz以上  
 RAM: 8GB  
 HDD・SSD空き容量: 10GB  
 ＊Python 3.9には未対応
