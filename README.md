@@ -13,7 +13,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)  
-v2.3.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
+v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
 
 ## Operating environment    
 ### Minimum specs  
@@ -58,7 +58,7 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)  
-v2.3.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
+v2..0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
 
 ## 動作環境  
 ### 最低スペック  
@@ -135,10 +135,10 @@ HDD・SSD空き容量: 10GB
 - [x] **v2.1.4** 不要なコードの削除
 - [x] **v2.1.5** 画面レイアウト変更準備につき、コード整理と一部項目削除
 - [x] **v2.2.0** ロボットの拡大縮小機能仮対応
-- [ ] **v2.3.0** Python 3.9対応
 - [ ] **v3.0.0** 拡大機能廃止、縮小機能の更新、複数画面解像度対応、ボタンレイアウト変更、オプション変更
-- [ ] **v3.2.0** パック破損時の自動削除
-- [ ] **v3.3.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
+- [ ] **v3.1.0** パック破損時の自動削除
+- [ ] **v3.2.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
+- [ ] **v3.3.0** Python 3.9 対応
 - [ ] **v4.0.0** Pythonファイル（.py）でのプログラム出力機能追加
 - [ ] **v5.0.0** 本ソフトからev3devへのプログラム転送と権限付与
 - [ ] **v6.0.0** 簡易的なライントレース対応
