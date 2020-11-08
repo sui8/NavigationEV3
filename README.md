@@ -14,6 +14,7 @@ v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)  
 v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
+v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)  
 
 ## Operating environment    
 ### Minimum specs  
@@ -27,7 +28,7 @@ HDD free space: 1GB
 ### Recommended specs  
 Windows 10 64Bit Ver2004  
 1920x1080 dot resolution  
-(When running from source code) Python 3.8  
+(When running from source code) Python 3.9  
 CPU: 2 GHz or higher, supporting PAE, NX, and SSE2  
 RAM: 8GB  
 HDD/SSD free space: 10GB  
@@ -58,7 +59,8 @@ v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)
 v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
 v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
 v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)  
-v2..0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
+v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
+v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)  
 
 ## 動作環境  
 ### 最低スペック  
@@ -72,11 +74,10 @@ HDD空き容量: 1GB
 ### 推奨スペック  
 Windows 10 64Bit Ver2004  
 1920x1080 ドットの解像度（16:9推奨）  
-（ソースコードからの実行時）Python 3.8  
+（ソースコードからの実行時）Python 3.9  
 CPU: PAE、NX、およびSSE2をサポートする2 GHz以上  
 RAM: 8GB  
 HDD・SSD空き容量: 10GB  
-＊Python 3.9には未対応
 
 
 ## 機能一覧
@@ -135,10 +136,11 @@ HDD・SSD空き容量: 10GB
 - [x] **v2.1.4** 不要なコードの削除
 - [x] **v2.1.5** 画面レイアウト変更準備につき、コード整理と一部項目削除
 - [x] **v2.2.0** ロボットの拡大縮小機能仮対応
+- [x] **v2.3.0** CourtParkタブシステム移行
+- [x] **v2.4.0** Python 3.9.0 対応
 - [ ] **v3.0.0** 拡大機能廃止、縮小機能の更新、複数画面解像度対応、ボタンレイアウト変更、オプション変更
 - [ ] **v3.1.0** パック破損時の自動削除
 - [ ] **v3.2.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
-- [ ] **v3.3.0** Python 3.9 対応
 - [ ] **v4.0.0** Pythonファイル（.py）でのプログラム出力機能追加
 - [ ] **v5.0.0** 本ソフトからev3devへのプログラム転送と権限付与
 - [ ] **v6.0.0** 簡易的なライントレース対応
