@@ -13,7 +13,7 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α" #バージョン
+Version = "3.0.0α-Dev3" #バージョン
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
@@ -79,56 +79,74 @@ def Exit(event):
     sys.exit(0)
 
 #ファイルオープン
-def FileAskOpen(event):
-    global msg
-    msgbox.showinfo(Title, "未実装です")
+def AskFileOpen(event):
+    global TitleName
+    msgbox.showinfo(TitleName, "未実装です")
 
 #新規ファイルオープン
 def NewFileCreate(event):
-    global msg
-    msg.showinfo(Title, "未実装です")
+    global TitleName
+    msgbox.showinfo(TitleName, "未実装です")
 
 #ファイル上書き
 def FileOverWrite(event):
-    global msg
-    msg.showinfo(Title, "未実装です")
+    global TitleName
+    msgbox.showinfo(TitleName, "未実装です")
+
+#ファイルの名前を付けて保存
+def NewFileSave(event):
+    global TitleName
+    msgbox.showinfo(TitleName, "未実装です")
 
 #----ボタン類描画---------------------------------------
 
-#ボタン描画
+#ボタン描画（一時無効）
+'''
 Button_Open = wx.Button(frame, wx.ID_OPEN, pos=(10,10), label="開く")
 Button_Close = wx.Button(frame, wx.ID_CLOSE, pos=(10,40))
 Button_New = wx.Button(frame, wx.ID_NEW, pos=(100,10))
 Button_Save = wx.Button(frame, wx.ID_SAVE, pos=(100,40))
 Button_Help = wx.Button(frame, wx.ID_HELP, pos=(200,40))
 
-Button_Open.Bind(wx.EVT_BUTTON, FileAskOpen)
+Button_Open.Bind(wx.EVT_BUTTON, AskFileOpen)
 Button_Close.Bind(wx.EVT_BUTTON, Exit)
 Button_New.Bind(wx.EVT_BUTTON, NewFileCreate)
 Button_Save.Bind(wx.EVT_BUTTON, FileOverWrite)
+'''
 
 #ツールバー描画
 Menubar = wx.MenuBar()
 FileMenu = wx.Menu()
-FileMenu.Append(wx.ID_ANY, '新規', '新規のプログラムを作成する')
-FileMenu.Append(wx.ID_ANY, '開く', '作成したプログラムを開く')
-FileMenu.Append(wx.ID_ANY, '保存', '作成したプログラムを上書き保存する')
-FileMenu.Append(wx.ID_ANY, '名前を付けて保存', '作成したプログラムに名前を付けて保存する')
-FileMenu.Append(wx.ID_ANY, '終了', 'ソフトウェアを終了')
-Menubar.Append(FileMenu, '&ファイル')
+FileMenu.Append(1, '新規(&N)', '新規のプログラムを作成する')
+FileMenu.Append(2, '開く(&O)', '作成したプログラムを開く')
+FileMenu.Append(3, '保存(&S)', '作成したプログラムを上書き保存する')
+FileMenu.Append(4, '名前を付けて保存(&A)', '作成したプログラムを名前を付けて保存する')
+FileMenu.AppendSeparator()
+#FileMenu.AppendItem(wx.MenuItem(FileMenu, ID_EXIT, '終了(&E)\tCtrl+E', 'ソフトウェアを終了'))
+FileMenu.Append(5, '終了(&E)', 'ソフトウェアを終了する')
+
+frame.Bind(wx.EVT_MENU, NewFileCreate, id=1)
+frame.Bind(wx.EVT_MENU, AskFileOpen, id=2)
+frame.Bind(wx.EVT_MENU, FileOverWrite, id=3)
+frame.Bind(wx.EVT_MENU, NewFileSave, id=4)
+frame.Bind(wx.EVT_MENU, Exit, id=5)
+Menubar.Append(FileMenu, 'ファイル(&F)')
 frame.SetMenuBar(Menubar)
 
 FileMenu2 = wx.Menu()
-FileMenu2.Append(wx.ID_ANY, '一つ戻す', 'プログラムを一つ戻す')
-FileMenu2.Append(wx.ID_ANY, '全て削除', 'プログラムを白紙に戻す')
-Menubar.Append(FileMenu2, '&編集')
+FileMenu2.Append(wx.ID_ANY, '一つ戻す(&Z)', 'プログラムを一つ戻す')
+FileMenu2.Append(wx.ID_ANY, '全て削除(&U)', 'プログラムを白紙に戻す')
+Menubar.Append(FileMenu2, '編集(&E)')
 frame.SetMenuBar(Menubar)
 
 FileMenu3 = wx.Menu()
-FileMenu3.Append(wx.ID_ANY, 'マニュアル', 'このソフトウェアのマニュアルを表示')
-FileMenu3.Append(wx.ID_ANY, 'アップデートのチェック', 'ソフトウェアのアップデートを確認')
-FileMenu3.Append(wx.ID_ANY, 'このソフトウェアについて', 'このソフトウェアの情報を表示宇')
-Menubar.Append(FileMenu3, '&ヘルプ')
+FileMenu3.Append(wx.ID_ANY, 'マニュアル(&H)', 'このソフトウェアのマニュアルを表示')
+FileMenu3.Append(wx.ID_ANY, 'アップデートのチェック(&U)', 'ソフトウェアのアップデートを確認')
+
+FileMenu3.AppendSeparator()
+
+FileMenu3.Append(wx.ID_ANY, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示宇')
+Menubar.Append(FileMenu3, 'ヘルプ(&H)')
 frame.SetMenuBar(Menubar)
 
 #---コート画像描画-----------------------------------------
