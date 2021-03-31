@@ -1,7 +1,7 @@
 #インポート群
 import wx #GUI
-import tkinter as tk #TKinter無効化用
-from tkinter import messagebox as msgbox #メッセージボックス
+#import tkinter as tk #TKinter無効化用
+#from tkinter import messagebox as msgbox #メッセージボックス
 from PIL import Image , ImageTk #画像取り扱い
 import os #Windows環境用
 import sys #システム終了用
@@ -13,10 +13,11 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev3" #バージョン
+Version = "3.0.0α-Dev4" #バージョン
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
+WindowRatio = [16, 9]
 DefaultWindowSize = 0.8
 SubWindowSize = [350, 400]
 
@@ -35,6 +36,7 @@ WindowSize = []
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
+WindowRatio = WindowRatio[0] / WindowRatio[1]
 
 #デバッグ用関数
 def Debug(text):
@@ -44,7 +46,7 @@ def Debug(text):
 #---起動------------------------------------------
 
 #Tkinterのroot無効化
-tk.Tk().withdraw()
+#tk.Tk().withdraw()
 
 #Windowsにおいての画面横幅と縦幅取得
 DisplaySize.append(int(windll.user32.GetSystemMetrics(0)))
@@ -53,23 +55,41 @@ Debug("DisplaySize " + str(DisplaySize))
 
 #最低要件確認
 if not DisplaySize[0] >= DisplayMin[0] or not DisplaySize[1] >= DisplayMin[1]:
-    msgbox.showerror(TitleName, "このPCはシステム最低要件を満たしていないため、起動できません。")
+    wx.MessageDialog(None, "このPCはシステム最低要件を満たしていないため、起動できません。", TitleName, style=wx.ICON_ERROR).ShowModal()
     sys.exit(0)
 
 #Config読み込み（try exceptで対策必要）
 ConfigLoader.read(ConfigPath, encoding="utf-8")
 Config = ConfigLoader["Settings"]
 
-DefaultWindowSize = float(format(float(Config.get("Zoom")), ".2f"))
+WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f"))
+WindowSizeScale = 0.8
 
-#ウィンドウサイズ設定（16:9）
-WindowSize.append(int(format(round(DisplaySize[0] * DefaultWindowSize, 0), ".0f")))
-WindowSize.append(int(format(round(DisplaySize[1] * DefaultWindowSize, 0), ".0f")))
-Debug("WindowSize " + str(WindowSize))
+#画面比率計算と補正後ウィンドウサイズ算出（16:9）
+if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
+    WindowSizeX = (DisplaySize[0])
+    WindowSizeY = (DisplaySize[1])
+    
+elif DisplaySize[0] / DisplaySize[1] > WindowRatio: #画面比率が16:9より大きい時
+    WindowSizeY = DisplaySize[1]
+    WindowSizeX = WindowSizeY * WindowRatio #縦側に空きを作る
+
+else: #画面比率が16:9より小さい時
+    WindowSizeX = DisplaySize[0]
+    WindowSizeY = WindowSizeX / WindowRatio
+    
+#ウィンドウサイズ設定（ConfigのZoom値を掛ける）
+WindowSizeX = (int(format(round(WindowSizeX * WindowSizeScale, 0), ".0f")))
+WindowSizeY = (int(format(round(WindowSizeY * WindowSizeScale, 0), ".0f")))
+Debug("WindowSize [{0}, {1}]".format(WindowSizeX, WindowSizeY))
+
+def des(event):
+    global frame_About
+    frame_About.Destroy()
 
 #メインウィンドウ起動
 app = wx.App()
-frame = wx.Frame(None, -1, str(TitleName) + " Ver" + str(Version), size=(WindowSize[0],WindowSize[1]))
+frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY))
 frame.Show()
 
 #---関数------------------------------------------
@@ -81,22 +101,27 @@ def Exit(event):
 #ファイルオープン
 def AskFileOpen(event):
     global TitleName
-    msgbox.showinfo(TitleName, "未実装です")
+    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 #新規ファイルオープン
 def NewFileCreate(event):
     global TitleName
-    msgbox.showinfo(TitleName, "未実装です")
+    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 #ファイル上書き
 def FileOverWrite(event):
     global TitleName
-    msgbox.showinfo(TitleName, "未実装です")
+    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 #ファイルの名前を付けて保存
 def NewFileSave(event):
     global TitleName
-    msgbox.showinfo(TitleName, "未実装です")
+    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+
+#このソフトウェアについて
+def About(event):
+    global TitleName
+    #wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 #----ボタン類描画---------------------------------------
 
@@ -134,19 +159,22 @@ Menubar.Append(FileMenu, 'ファイル(&F)')
 frame.SetMenuBar(Menubar)
 
 FileMenu2 = wx.Menu()
-FileMenu2.Append(wx.ID_ANY, '一つ戻す(&Z)', 'プログラムを一つ戻す')
-FileMenu2.Append(wx.ID_ANY, '全て削除(&U)', 'プログラムを白紙に戻す')
+FileMenu2.Append(6, '一つ戻す(&Z)', 'プログラムを一つ戻す')
+FileMenu2.Append(7, '全て削除(&U)', 'プログラムを白紙に戻す')
 Menubar.Append(FileMenu2, '編集(&E)')
 frame.SetMenuBar(Menubar)
 
 FileMenu3 = wx.Menu()
-FileMenu3.Append(wx.ID_ANY, 'マニュアル(&H)', 'このソフトウェアのマニュアルを表示')
-FileMenu3.Append(wx.ID_ANY, 'アップデートのチェック(&U)', 'ソフトウェアのアップデートを確認')
+FileMenu3.Append(8, 'マニュアル(&H)', 'このソフトウェアのマニュアルを表示')
+FileMenu3.Append(9, 'アップデートのチェック(&U)', 'ソフトウェアのアップデートを確認')
 
 FileMenu3.AppendSeparator()
 
-FileMenu3.Append(wx.ID_ANY, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示宇')
+FileMenu3.Append(10, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示します')
 Menubar.Append(FileMenu3, 'ヘルプ(&H)')
+
+frame.Bind(wx.EVT_MENU, About, id=10)
+
 frame.SetMenuBar(Menubar)
 
 #---コート画像描画-----------------------------------------
