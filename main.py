@@ -13,7 +13,7 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev4" #バージョン
+Version = "3.0.0α-Dev4a" #バージョン
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
@@ -63,7 +63,6 @@ ConfigLoader.read(ConfigPath, encoding="utf-8")
 Config = ConfigLoader["Settings"]
 
 WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f"))
-WindowSizeScale = 0.8
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -121,7 +120,7 @@ def NewFileSave(event):
 #このソフトウェアについて
 def About(event):
     global TitleName
-    #wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 #----ボタン類描画---------------------------------------
 
