@@ -13,12 +13,12 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev4a" #バージョン
+Version = "3.0.0α-Dev5" #バージョン
+Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
 WindowRatio = [16, 9]
-DefaultWindowSize = 0.8
 SubWindowSize = [350, 400]
 
 FontSize = 10
@@ -45,13 +45,22 @@ def Debug(text):
 
 #---起動------------------------------------------
 
-#Tkinterのroot無効化
-#tk.Tk().withdraw()
+#初期設定出力（※将来的にConfigに移行。）
+Debug("--Debug Log--")
+Debug("{0} Ver{1}".format(TitleName, Version))
+Debug(Developer)
+Debug("\n--Constants--")
+Debug("DisplayMax: {0}".format(DisplayMax))
+Debug("DisplayMin: {0}".format(DisplayMin))
+Debug("WindowRatio(Calculated): {0}".format(WindowRatio))
+Debug("FontSize: {0}".format(FontSize))
+Debug("ConfigPath: {0}".format(ConfigPath))
+Debug("CourtImagePath: {0}".format(CourtImagePath))
 
 #Windowsにおいての画面横幅と縦幅取得
 DisplaySize.append(int(windll.user32.GetSystemMetrics(0)))
 DisplaySize.append(int(windll.user32.GetSystemMetrics(1)))
-Debug("DisplaySize " + str(DisplaySize))
+Debug("DisplaySize {0}".format(DisplaySize))
 
 #最低要件確認
 if not DisplaySize[0] >= DisplayMin[0] or not DisplaySize[1] >= DisplayMin[1]:
@@ -61,8 +70,11 @@ if not DisplaySize[0] >= DisplayMin[0] or not DisplaySize[1] >= DisplayMin[1]:
 #Config読み込み（try exceptで対策必要）
 ConfigLoader.read(ConfigPath, encoding="utf-8")
 Config = ConfigLoader["Settings"]
+Debug("\n> The configuration file has been successfully loaded.")
+Debug("\n--User defined constants(Config)--")
 
-WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f"))
+WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f")) #ウィンドウ表示倍率
+Debug("WindowSizeScale: {0}".format(WindowSizeScale))
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -82,10 +94,6 @@ WindowSizeX = (int(format(round(WindowSizeX * WindowSizeScale, 0), ".0f")))
 WindowSizeY = (int(format(round(WindowSizeY * WindowSizeScale, 0), ".0f")))
 Debug("WindowSize [{0}, {1}]".format(WindowSizeX, WindowSizeY))
 
-def des(event):
-    global frame_About
-    frame_About.Destroy()
-
 #メインウィンドウ起動
 app = wx.App()
 frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY))
@@ -100,7 +108,16 @@ def Exit(event):
 #ファイルオープン
 def AskFileOpen(event):
     global TitleName
-    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+    FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
+    OpenFileDialog = wx.FileDialog(frame, message="開く", wildcard=FileTypes, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+
+    #ユーザーがキャンセルした場合、スルー
+    if OpenFileDialog.ShowModal() != wx.ID_OK:
+        return
+
+    OpenFilePath = OpenFileDialog.GetPath()
+    wx.MessageDialog(None, "あなたの選択した読み込みファイル\n{0}\n※読み込み昨日は未実装です".format(OpenFilePath), TitleName).ShowModal()
+    OpenFileDialog.Destroy()
 
 #新規ファイルオープン
 def NewFileCreate(event):
@@ -115,7 +132,16 @@ def FileOverWrite(event):
 #ファイルの名前を付けて保存
 def NewFileSave(event):
     global TitleName
-    wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+    FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
+    SaveFileDialog = wx.FileDialog(frame, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+
+    #ユーザーがキャンセルした場合、スルー
+    if SaveFileDialog.ShowModal() != wx.ID_OK:
+        return
+
+    SaveFilePath = SaveFileDialog.GetPath()
+    wx.MessageDialog(None, "あなたの選択した保存先\n{0}\n※保存機能は未実装です".format(SaveFilePath), TitleName).ShowModal()
+    SaveFileDialog.Destroy()
 
 #このソフトウェアについて
 def About(event):
