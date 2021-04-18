@@ -1,6 +1,6 @@
 #インポート群
 import wx #GUI
-#from PIL import Image #画像取り扱い
+#from PIL import Image , ImageTk #画像取り扱い
 import os #Windows環境用
 import sys #システム終了用
 from ctypes import windll #Windows環境画面解像度用
@@ -11,26 +11,28 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev6" #バージョン
+Version = "3.0.0α-Dev7" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
 WindowRatio = [16, 9]
-SubWindowSize = [350, 400]
+SubWindowSize = [550, 480]
 
 FontSize = 10
 ConfigPath = "Config/Config.ini"
+HomePath = "Documents"
 
 DebugOutput = True #デバッグ情報を出力するか
 
-CourtImagePath = "Data/New.png"
+CourtImagePath = "Data/Default.png"
 
-#----定義・初期設定等---------------------------------------
+'''----定義・初期設定等---------------------------------------'''
 
 #リストの定義
 DisplaySize = []
 WindowSize = []
+CI_Ratio = []
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
@@ -41,7 +43,7 @@ def Debug(text):
     if DebugOutput == True:
         print(text)
 
-#---起動------------------------------------------
+'''---起動------------------------------------------'''
 
 #初期設定出力（※将来的にConfigに移行。）
 Debug("--Debug Log--")
@@ -92,22 +94,65 @@ WindowSizeX = (int(format(round(WindowSizeX * WindowSizeScale, 0), ".0f")))
 WindowSizeY = (int(format(round(WindowSizeY * WindowSizeScale, 0), ".0f")))
 Debug("WindowSize: [{0}, {1}]".format(WindowSizeX, WindowSizeY))
 
+
+#ホームディレクトリ取得（ユーザー）
+HomeDirectory = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + "\\" + HomePath
+
+#指定されたディレクトリが
+if not os.path.exists(HomeDirectory):
+    HomeDirectory = "C:"
+    Debug("[Error] The specified path could not be found. Use the default directory.")
+
+elif not os.path.isdir(HomeDirectory):
+    HomeDirectory = "C:"
+    Debug("[Error] The specified path is not a directory. Use the default directory.")
+
+Debug("HomeDirectory: {0}".format(HomeDirectory))
+
+'''---ウィンドウ別クラス（メイン）----------------------------------------'''
+
+#ソフトウェアについてタブ
 class AboutWindow(wx.Frame):
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title,size=(200, 100))
-        self.Show()
-        
-class MyApp(wx.App):
+        wx.Frame.__init__(self, parent, title=title, size=(SubWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
+        #テキスト描画
+        panel = wx.Panel(self, wx.ID_ANY)
+        text_1 = wx.StaticText(panel, wx.ID_ANY, "", style=wx.TE_CENTER)
+        text_2 = wx.StaticText(panel, wx.ID_ANY, TitleName, style=wx.TE_CENTER)
+        text_3 = wx.StaticText(panel, wx.ID_ANY, "", style=wx.TE_CENTER)
+
+        FontSetting = wx.Font(32, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        Font_NewLine = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+
+        layout = wx.BoxSizer(wx.VERTICAL)
+        text_1.SetFont(Font_NewLine)
+        text_2.SetFont(FontSetting)
+        text_3.SetFont(Font_NewLine)
+        layout.Add(text_1, flag=wx.GROW)
+        layout.Add(text_2, flag=wx.GROW)
+        layout.Add(text_3, flag=wx.GROW)
+        layout.Add(wx.StaticLine(panel), flag=wx.GROW)
+        panel.SetSizer(layout)
+
+        #ボタン描画
+        Button_OK = wx.Button(frame, wx.ID_OPEN, pos=(400,450), label="OK")
+        Button_OK.Bind(wx.EVT_BUTTON, print("PONG"))
+        
+        self.Show()
+
+
+#メインクラス
+class Main(wx.App):
+        
     #---関数------------------------------------------
 
     #退出用
-    def Exit(event):
+    def Exit(self, event):
         sys.exit(0)
 
     #ファイルオープン
-    def AskFileOpen(event):
-        global TitleName
+    def AskFileOpen(self, event):
         FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
         OpenFileDialog = wx.FileDialog(frame, message="開く", wildcard=FileTypes, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 
@@ -120,18 +165,15 @@ class MyApp(wx.App):
         OpenFileDialog.Destroy()
 
     #新規ファイルオープン
-    def NewFileCreate(event):
-        global TitleName
+    def NewFileCreate(self, event):
         wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
     #ファイル上書き
-    def FileOverWrite(event):
-        global TitleName
+    def FileOverWrite(self, event):
         wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
     #ファイルの名前を付けて保存
-    def NewFileSave(event):
-        global TitleName
+    def NewFileSave(self, event):
         FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
         SaveFileDialog = wx.FileDialog(frame, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
 
@@ -144,22 +186,23 @@ class MyApp(wx.App):
         SaveFileDialog.Destroy()
 
     #このソフトウェアについて
-    def About(event):
-        global TitleName
+    def About(self, event):
         AboutWindow(frame, TitleName)
         self.SetTopWindow(frame)
         #wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
-    #---------------------------------------------------------
 
-    #メインウィンドウ
+    #---------------------------------------------------------------------
+
+    #メインウィンドウ（最大化とサイズ変更のみ無効化）
     def OnInit(self):
-        frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY))
+        global frame
+        frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY), style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
         frame.Show(True)
         self.SetTopWindow(frame)
 
-        #-----------------------------------------------------
-        
+        #----オブジェクト描画---------------------------------------
+
         #ツールバー描画
         Menubar = wx.MenuBar()
         FileMenu = wx.Menu()
@@ -197,27 +240,41 @@ class MyApp(wx.App):
 
         frame.SetMenuBar(Menubar)
 
-        #---コート画像描画-----------------------------------------
+        #ステータスバー描画
+        frame.CreateStatusBar()
+        #frame.SetStatusText("起動完了")
+
+        '''---コート画像描画-----------------------------------------'''
 
         #コート画像読み込みと貼り付け
         CourtImage = wx.Image(CourtImagePath)
         CI_Size = CourtImage.GetSize() #1920x1080用の画像で読み込み
         Debug("CourtImageSize: {0}".format(CI_Size))
 
-        CI_Scale = 1920 / WindowSizeX
-        Debug("CourtImageScale(Calculated): {0}".format(CI_Scale))
+        #コート画像縦横比計算
+        CI_Ratio.append(CI_Size[0] / CI_Size[1])
+        CI_Ratio.append(CI_Size[1] / CI_Size[0])
 
-        CI_Size[0] = (int(format(round(1920 / CI_Scale, 0), ".0f")))
-        CI_Size[1] = (int(format(round(1080 / CI_Scale, 0), ".0f")))
+        #Debug("CourtImageRatio(Calculated): {0}".format(CI_Scale))
+
+        #CI_Size[0] = (int(format(round(1920 / CI_Scale, 0), ".0f")))
+        #CI_Size[1] = (int(format(round(1080 / CI_Scale, 0), ".0f")))
+
         Debug("CourtImageReScale: {0}".format(CI_Size))
-        wx.StaticBitmap(frame, -1, CourtImage.ConvertToBitmap(), pos=(0, 0), size=CI_Size)
+        #CourtImage = CourtImage.Scale(CI_Size[0], CI_Size[1], quality=wx.IMAGE_QUALITY_HIGH)
+        CourtImage = CourtImage.Scale(1536, 600, quality=wx.IMAGE_QUALITY_HIGH)
+        bitmap = wx.StaticBitmap(frame, -1, CourtImage.ConvertToBitmap(), pos=(0, 0), size=CourtImage.GetSize())
+
+        layout = wx.BoxSizer(wx.VERTICAL)
+        layout2 = wx.BoxSizer(wx.HORIZONTAL)
+        layout2.Add(bitmap, 1, flag=wx.TOP)
+        layout.Add(layout2, 1, flag=wx.CENTER)
 
         return True
 
 
-#メインウィンドウ起動
-app = MyApp(0)
-
+#メインウィンドウ指定
+app = Main(0)
 
 #アプリ実行
 app.MainLoop()
