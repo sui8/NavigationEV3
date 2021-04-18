@@ -1,8 +1,6 @@
 #インポート群
 import wx #GUI
-#import tkinter as tk #TKinter無効化用
-#from tkinter import messagebox as msgbox #メッセージボックス
-from PIL import Image , ImageTk #画像取り扱い
+#from PIL import Image , ImageTk #画像取り扱い
 import os #Windows環境用
 import sys #システム終了用
 from ctypes import windll #Windows環境画面解像度用
@@ -13,7 +11,7 @@ import configparser #Config(ini)読み込み用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev5" #バージョン
+Version = "3.0.0α-Dev5a" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
@@ -26,7 +24,7 @@ ConfigPath = "Config/Config.ini"
 
 DebugOutput = True #デバッグ情報を出力するか
 
-CourtImagePath = "Data/Default.png"
+CourtImagePath = "Data/New.png"
 
 #----定義・初期設定等---------------------------------------
 
@@ -60,7 +58,7 @@ Debug("CourtImagePath: {0}".format(CourtImagePath))
 #Windowsにおいての画面横幅と縦幅取得
 DisplaySize.append(int(windll.user32.GetSystemMetrics(0)))
 DisplaySize.append(int(windll.user32.GetSystemMetrics(1)))
-Debug("DisplaySize {0}".format(DisplaySize))
+Debug("DisplaySize: {0}".format(DisplaySize))
 
 #最低要件確認
 if not DisplaySize[0] >= DisplayMin[0] or not DisplaySize[1] >= DisplayMin[1]:
@@ -92,7 +90,7 @@ else: #画面比率が16:9より小さい時
 #ウィンドウサイズ設定（ConfigのZoom値を掛ける）
 WindowSizeX = (int(format(round(WindowSizeX * WindowSizeScale, 0), ".0f")))
 WindowSizeY = (int(format(round(WindowSizeY * WindowSizeScale, 0), ".0f")))
-Debug("WindowSize [{0}, {1}]".format(WindowSizeX, WindowSizeY))
+Debug("WindowSize: [{0}, {1}]".format(WindowSizeX, WindowSizeY))
 
 #メインウィンドウ起動
 app = wx.App()
@@ -116,7 +114,7 @@ def AskFileOpen(event):
         return
 
     OpenFilePath = OpenFileDialog.GetPath()
-    wx.MessageDialog(None, "あなたの選択した読み込みファイル\n{0}\n※読み込み昨日は未実装です".format(OpenFilePath), TitleName).ShowModal()
+    wx.MessageDialog(None, "あなたの選択した読み込みファイル\n{0}\n※読み込み機能は未実装です".format(OpenFilePath), TitleName).ShowModal()
     OpenFileDialog.Destroy()
 
 #新規ファイルオープン
@@ -167,13 +165,12 @@ Button_Save.Bind(wx.EVT_BUTTON, FileOverWrite)
 #ツールバー描画
 Menubar = wx.MenuBar()
 FileMenu = wx.Menu()
-FileMenu.Append(1, '新規(&N)', '新規のプログラムを作成する')
-FileMenu.Append(2, '開く(&O)', '作成したプログラムを開く')
-FileMenu.Append(3, '保存(&S)', '作成したプログラムを上書き保存する')
-FileMenu.Append(4, '名前を付けて保存(&A)', '作成したプログラムを名前を付けて保存する')
+FileMenu.Append(1, '新規(&N)\tCtrl+N', '新規のプログラムを作成する')
+FileMenu.Append(2, '開く(&O)\tCtrl+O', '作成したプログラムを開く')
+FileMenu.Append(3, '保存(&S)\tCtrl+S', '作成したプログラムを上書き保存する')
+FileMenu.Append(4, '名前を付けて保存(&A)\tCtrl+A', '作成したプログラムを名前を付けて保存する')
 FileMenu.AppendSeparator()
-#FileMenu.AppendItem(wx.MenuItem(FileMenu, ID_EXIT, '終了(&E)\tCtrl+E', 'ソフトウェアを終了'))
-FileMenu.Append(5, '終了(&E)', 'ソフトウェアを終了する')
+FileMenu.Append(5, '終了(&E)\tCtrl+E', 'ソフトウェアを終了する')
 
 frame.Bind(wx.EVT_MENU, NewFileCreate, id=1)
 frame.Bind(wx.EVT_MENU, AskFileOpen, id=2)
@@ -184,14 +181,14 @@ Menubar.Append(FileMenu, 'ファイル(&F)')
 frame.SetMenuBar(Menubar)
 
 FileMenu2 = wx.Menu()
-FileMenu2.Append(6, '一つ戻す(&Z)', 'プログラムを一つ戻す')
-FileMenu2.Append(7, '全て削除(&U)', 'プログラムを白紙に戻す')
+FileMenu2.Append(6, '一つ戻す(&Z)\tCtrl+Z', 'プログラムを一つ戻す')
+FileMenu2.Append(7, '全て削除(&U)\tCtrl+U', 'プログラムを白紙に戻す')
 Menubar.Append(FileMenu2, '編集(&E)')
 frame.SetMenuBar(Menubar)
 
 FileMenu3 = wx.Menu()
-FileMenu3.Append(8, 'マニュアル(&H)', 'このソフトウェアのマニュアルを表示')
-FileMenu3.Append(9, 'アップデートのチェック(&U)', 'ソフトウェアのアップデートを確認')
+FileMenu3.Append(8, 'マニュアル(&H)\tCtrl+H', 'このソフトウェアのマニュアルを表示')
+FileMenu3.Append(9, 'アップデートのチェック(&U)\tCtrl+U', 'ソフトウェアのアップデートを確認')
 
 FileMenu3.AppendSeparator()
 
@@ -206,8 +203,16 @@ frame.SetMenuBar(Menubar)
 
 #コート画像読み込みと貼り付け
 CourtImage = wx.Image(CourtImagePath)
-CI_Bitmap = CourtImage.ConvertToBitmap()
-wx.StaticBitmap(frame, -1, CI_Bitmap, pos=(0, 0), size=CourtImage.GetSize())
+CI_Size = CourtImage.GetSize() #1920x1080用の画像で読み込み
+Debug("CourtImageSize: {0}".format(CI_Size))
+
+CI_Scale = 1920 / WindowSizeX
+Debug("CourtImageScale(Calculated): {0}".format(CI_Scale))
+
+CI_Size[0] = (int(format(round(1920 / CI_Scale, 0), ".0f")))
+CI_Size[1] = (int(format(round(1080 / CI_Scale, 0), ".0f")))
+Debug("CourtImageReScale: {0}".format(CI_Size))
+wx.StaticBitmap(frame, -1, CourtImage.ConvertToBitmap(), pos=(0, 0), size=CI_Size)
 
 #アプリ実行
 app.MainLoop()
