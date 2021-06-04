@@ -9,11 +9,12 @@ import zipfile #NCPファイル用
 import configparser #Config(ini)読み込み用
 import subprocess #ファイルオープン用
 import webbrowser #ウェブブラウザーオープン用
+import math #計算用
 
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev8" #バージョン
+Version = "3.0.0α-Dev9" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
@@ -30,7 +31,7 @@ DefaultHomePath = "C:"
 DefaultCourtImagePath = "Data/New2.png"
 DefaultRobotImagePath = "Data/Robot.png"
 
-UserGuideURL = "https://zcen.net"
+UserGuideURL = "https://example.com"
 UserGuidePath = "Data/UserGuide.txt"
 
 '''----定義・初期設定等---------------------------------------'''
@@ -39,6 +40,8 @@ UserGuidePath = "Data/UserGuide.txt"
 DisplaySize = []
 WindowSize = []
 CI_Ratio = []
+PrevPos = []
+NewPos= []
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
@@ -81,20 +84,30 @@ if not DisplaySize[0] >= DisplayMin[0] or not DisplaySize[1] >= DisplayMin[1]:
     wx.MessageDialog(None, "このPCはシステム最低要件を満たしていないため、起動できません。", TitleName, style=wx.ICON_ERROR).ShowModal()
     sys.exit(0)
 
-#Config読み込み（try exceptで対策必要）
+#Config読み込み（try exceptで対策必要・開発中）
 ConfigLoader.read(ConfigPath, encoding="utf-8")
-Config = ConfigLoader["Settings"]
-Debug("\n> The configuration file has been successfully loaded.")
-Debug("\n--User defined constants(Config)--")
 
-WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f")) #ウィンドウ表示倍率
-CourtImagePath = str(Config.get("CourtImagePath")) #コート画像パス
-RobotImagePath = str(Config.get("RobotImagePath")) #ロボット画像パス
-HomePath = str(Config.get("HomePath")) #ホームディレクトリ
-Debug("WindowSizeScale: {0}".format(WindowSizeScale))
-Debug("CourtImagePath: {0}".format(CourtImagePath))
-Debug("RobotImagePath: {0}".format(RobotImagePath))
-Debug("HomePath: {0}".format(HomePath))
+try:
+    Config = ConfigLoader["Settings"]
+except Expection as E:
+    Debug("[Error] The setting section was not found. Use default settings.")
+else:
+
+    try:
+        WindowSizeScale = float(format(float(Config.get("Zoom")), ".2f")) #ウィンドウ表示倍率
+    except Expection as E:
+        Debug("[Error] 'Zoom' setting was not found. Use default settings.")
+    else:
+        Debug("\n> The configuration file has been successfully loaded.")
+        Debug("\n--User defined constants(Config)--")
+
+        CourtImagePath = str(Config.get("CourtImagePath")) #コート画像パス
+        RobotImagePath = str(Config.get("RobotImagePath")) #ロボット画像パス
+        HomePath = str(Config.get("HomePath")) #ホームディレクトリ
+        Debug("WindowSizeScale: {0}".format(WindowSizeScale))
+        Debug("CourtImagePath: {0}".format(CourtImagePath))
+        Debug("RobotImagePath: {0}".format(RobotImagePath))
+        Debug("HomePath: {0}".format(HomePath))
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -194,7 +207,7 @@ class MainWindow(wx.Frame):
         wx.MessageDialog(None, "あなたの選択した読み込みファイル\n{0}\n※読み込み機能は未実装です".format(OpenFilePath), TitleName).ShowModal()
         OpenFileDialog.Destroy()
 
-    #新規ファイルオープン
+    #新規ファイル作成
     def NewFileCreate(self, event):
         wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
@@ -228,11 +241,71 @@ class MainWindow(wx.Frame):
         AboutWindow(self, TitleName)
         app.SetTopWindow(self)
 
+    ##ロボット画像処理関係
+
+    #ロボット走行距離算出
+    def MileageCal(self, PrevPos, NewPos):
+        AssumedDistanceX = NewPos[0] - PrevPos[0]
+        AssumedDistanceY = NewPos[1] - PrevPos[1]
+        
+        RobotMillage = math.sqrt(AssumedDistanceX * AssumedDistanceX + AssumedDistanceY * AssumedDistanceY)
+        
+        Debug("RobotDistance: {0}".format(RobotMillage))
+
+    #クリックを検知する
+    def onClick(self, event):
+        global PrevPos, NewPos
+        CursorPos = event.GetPosition()
+        
+        #Y座標反転
+        CursorPos.y = CI_Size.y - CursorPos.y
+
+        Debug("> onClick: ({0}, {1})".format(CursorPos.x, CursorPos.y))
+        self.SetStatusText("> onClick: {0}".format(CursorPos))
+
+        #初回位置かどうか
+
+        if NewPos:
+            PrevPos = NewPos
+            NewPos = CursorPos
+
+        else:
+            PrevPos = [0, 0]
+            NewPos = CursorPos
+
+        self.MileageCal(PrevPos, NewPos)
+        
+        #self.PaintRobot(CursorPos.x, CursorPos.y)
+
+    '''#ロボット画像描画
+    def PaintRobot(self, RobotPosX, RobotPosY):
+
+        RobotPanel = wx.Panel(self, wx.ID_ANY)
+        
+        RobotImage = wx.Image(RobotImagePath)
+        RI_Size = RobotImage.GetSize() #○○○x○○○用の画像で読み込み
+        Debug("RobotImageSize: {0}".format(RI_Size))
+
+        RI_Size[0] = int(format(round(RI_Size[0] / DisplayMagnification, 0), ".0f"))
+        RI_Size[1] = int(format(round(RI_Size[1] / DisplayMagnification, 0), ".0f"))
+        Debug("RobotImageReScale: {0}".format(RI_Size))
+        
+        RobotImage = RobotImage.Rescale(RI_Size[0], RI_Size[1], quality=wx.IMAGE_QUALITY_HIGH)
+        RI_Bitmap = wx.StaticBitmap(RobotPanel, -1, RobotImage.ConvertToBitmap(), pos=(RobotPosX, RobotPosY), size=RobotImage.GetSize())
+
+        Layout = wx.BoxSizer(wx.VERTICAL)
+        Layout2 = wx.BoxSizer(wx.HORIZONTAL)
+        Layout2.Add(RI_Bitmap, 1, flag=wx.TOP)
+        Layout.Add(Layout2, 1, flag=wx.CENTER)
+
+        RobotPanel.SetSizer(Layout)'''
+
 
     #---------------------------------------------------------------------
 
     #メインウィンドウ（最大化とサイズ変更のみ無効化）
     def __init__(self, title):
+        global CI_Size
         #global frame
         #frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY), style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
         wx.Frame.__init__(self, None, -1, title, size=(WindowSizeX,WindowSizeY), style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
@@ -298,13 +371,14 @@ class MainWindow(wx.Frame):
 
         Debug("CourtImageRatio(Calculated): {0}".format(CI_Ratio))
 
-        #CI_Size[0] = (int(format(round(1920 / CI_Ratio[0], 0), ".0f")))
-        #CI_Size[1] = (int(format(round(1080 / CI_Ratio[1], 0), ".0f")))
+        #CI_Size[0] = (int(format(round(CI_Size[0] * DisplayMagnification, 0), ".0f")))
+        #CI_Size[1] = (int(format(round(CI_Size[1] * DisplayMagnification, 0), ".0f")))
+        
         CI_Size[0] = CI_Size[0] - 28
 
         Debug("CourtImageReScale: {0}".format(CI_Size))
         CourtImage = CourtImage.Scale(CI_Size[0], CI_Size[1], quality=wx.IMAGE_QUALITY_HIGH)
-        #CourtImage = CourtImage.Rescale(1076, 531, quality=wx.IMAGE_QUALITY_HIGH)
+        #CourtImage = CourtImage.Rescale(600, 250, quality=wx.IMAGE_QUALITY_HIGH)
         #236:225だと思う。
         CI_Bitmap = wx.StaticBitmap(Panel, -1, CourtImage.ConvertToBitmap(), pos=(0, 0), size=CourtImage.GetSize())
 
@@ -313,22 +387,12 @@ class MainWindow(wx.Frame):
         Layout2.Add(CI_Bitmap, 1, flag=wx.TOP)
         Layout.Add(Layout2, 1, flag=wx.CENTER)
 
+        #コート画像クリックイベントを取得する関数をBindしておく
+        CI_Bitmap.Bind(wx.EVT_LEFT_UP, self.onClick)
+
         Panel.SetSizer(Layout)
-
-        '''---ロボット画像描画---------------------------------------'''
-
-        #コート画像読み込みと貼り付け
-        '''RobotImage = wx.Image(RobotImagePath)
-        RI_Size = RobotImage.GetSize() #○○○x○○○用の画像で読み込み
-        Debug("RobotImageSize: {0}".format(RI_Size))
-
-        RI_Size[0] = int(format(round(RI_Size[0] / DisplayMagnification, 0), ".0f"))
-        RI_Size[1] = int(format(round(RI_Size[1] / DisplayMagnification, 0), ".0f"))
-        Debug("RobotImageReScale: {0}".format(RI_Size))
         
-        RobotImage = RobotImage.Rescale(RI_Size[0], RI_Size[1], quality=wx.IMAGE_QUALITY_HIGH)
-        RI_Bitmap = wx.StaticBitmap(Panel, -1, RobotImage.ConvertToBitmap(), pos=(0, 0), size=RobotImage.GetSize())'''
-     
+
         self.Show(True)
         app.SetTopWindow(self)
 
