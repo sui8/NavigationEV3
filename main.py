@@ -14,13 +14,14 @@ import math #計算用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev9" #バージョン
+Version = "3.0.0α-Dev10" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
 WindowRatio = [16, 9]
 SubWindowSize = [550, 480]
+ControlWindowSize = [350, 500]
 
 FontSize = 10
 ConfigPath = "Config/Config.ini"
@@ -36,12 +37,13 @@ UserGuidePath = "Data/UserGuide.txt"
 
 '''----定義・初期設定等---------------------------------------'''
 
-#リストの定義
+#変数・リストの定義
 DisplaySize = []
 WindowSize = []
 CI_Ratio = []
 PrevPos = []
 NewPos= []
+RobotCounter = 0
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
@@ -104,10 +106,13 @@ else:
         CourtImagePath = str(Config.get("CourtImagePath")) #コート画像パス
         RobotImagePath = str(Config.get("RobotImagePath")) #ロボット画像パス
         HomePath = str(Config.get("HomePath")) #ホームディレクトリ
+        DecimalDigit = int(Config.get("DecimalDigit")) #ロボット距離小数点以下桁数指定
+        TireCircumference = float(Config.get("TireCircumference")) #タイヤ円周
         Debug("WindowSizeScale: {0}".format(WindowSizeScale))
         Debug("CourtImagePath: {0}".format(CourtImagePath))
         Debug("RobotImagePath: {0}".format(RobotImagePath))
         Debug("HomePath: {0}".format(HomePath))
+        Debug("DecimalDegit: {0}".format(DecimalDigit))
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -185,6 +190,39 @@ class AboutWindow(wx.Frame):
         self.Show()
 
 
+#同時起動タブ（コンパネ）
+#複数起動してしまうのでActivateEvent使うと良いかも
+class ControlWindow(wx.Frame):
+    #Entry操作系
+    def EntryClear(self, parent):
+        C_TextEntry1.Clear()
+
+    def EntryCopy(self, parent):
+        EntryValue = C_TextEntry1.GetValue()
+        wx.TheClipboard(wx.TextDataObject(EntryValue))
+        Debug("> Entry value has been Copied.")
+
+    #ウィンドウ
+    def __init__(self, parent, title):
+        global C_TextEntry1
+        wx.Frame.__init__(self, parent, title=title, size=(ControlWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
+
+        Panel = wx.Panel(self, wx.ID_ANY)
+
+        C_Text1 = wx.StaticText(Panel, -1, "○ロボット走行距離ログ", (5, 10))
+        C_Text2 = wx.StaticText(Panel, -1, "○機能パネル", (5, 260))
+        C_TextEntry1 = wx.TextCtrl(Panel, wx.ID_ANY, style=wx.TE_MULTILINE, size=(325, 220), pos=(5, 30))
+        
+        LogCopy_Button = wx.Button(Panel, label="データコピー", pos=(205, 5), size=(60, 25))
+        LogDelete_Button = wx.Button(Panel, label="履歴削除", pos=(270, 5), size=(60, 25))
+
+        #ButtonにBind
+        LogCopy_Button.Bind(wx.EVT_BUTTON, self.EntryCopy)
+        LogDelete_Button.Bind(wx.EVT_BUTTON, self.EntryClear)
+        
+        self.Show()
+
+
 #メインウィンドウ
 class MainWindow(wx.Frame):
         
@@ -241,16 +279,41 @@ class MainWindow(wx.Frame):
         AboutWindow(self, TitleName)
         app.SetTopWindow(self)
 
+    #コントロールパネルウィンドウ
+    def ControlPanel(self, event):
+        ControlWindow(self, TitleName + " ControlPanel")
+        app.SetTopWindow(self)
+
     ##ロボット画像処理関係
 
     #ロボット走行距離算出
     def MileageCal(self, PrevPos, NewPos):
+        global RobotCounter
         AssumedDistanceX = NewPos[0] - PrevPos[0]
         AssumedDistanceY = NewPos[1] - PrevPos[1]
         
         RobotMillage = math.sqrt(AssumedDistanceX * AssumedDistanceX + AssumedDistanceY * AssumedDistanceY)
-        
-        Debug("RobotDistance: {0}".format(RobotMillage))
+
+        #走行距離計算と小数点以下処理
+        if DecimalDigit != -1:
+            RobotMillage = round(RobotMillage, DecimalDigit)
+
+            if DecimalDigit == 0:
+                RobotMillage = math.floor(RobotMillage)
+
+
+        #タイヤ回転数と小数点以下処理
+        if DecimalDigit != -1:
+            TireRotation = round(RobotMillage / TireCircumference, DecimalDigit)
+
+            if DecimalDigit == 0:
+                TireRotation = math.floor(TireRotation)
+
+        C_TextEntry1.AppendText("{0}: X:{1} Y:{2} {3}に{4}度 距離:{5}mm タイヤ回転:{6}\n".format(RobotCounter, NewPos[0], NewPos[1], "右", "0", RobotMillage, TireRotation))
+        RobotCounter += 1
+
+        Debug("RobotCounter: {0}".format(RobotCounter))
+        Debug("RobotMillage: {0}".format(RobotMillage))
 
     #クリックを検知する
     def onClick(self, event):
@@ -261,7 +324,7 @@ class MainWindow(wx.Frame):
         CursorPos.y = CI_Size.y - CursorPos.y
 
         Debug("> onClick: ({0}, {1})".format(CursorPos.x, CursorPos.y))
-        self.SetStatusText("> onClick: {0}".format(CursorPos))
+        self.SetStatusText("座標: {0}".format(CursorPos))
 
         #初回位置かどうか
 
@@ -270,7 +333,7 @@ class MainWindow(wx.Frame):
             NewPos = CursorPos
 
         else:
-            PrevPos = [0, 0]
+            PrevPos = CursorPos
             NewPos = CursorPos
 
         self.MileageCal(PrevPos, NewPos)
@@ -335,8 +398,12 @@ class MainWindow(wx.Frame):
         FileMenu2 = wx.Menu()
         FileMenu2.Append(6, '一つ戻す(&Z)\tCtrl+Z', 'プログラムを一つ戻す')
         FileMenu2.Append(7, '全て削除(&U)\tCtrl+U', 'プログラムを白紙に戻す')
+        FileMenu2.AppendSeparator()
+        FileMenu2.Append(12, 'コントロールパネルを開く(&C)\tCtrl+C', 'コントロールパネルを開く')
         Menubar.Append(FileMenu2, '編集(&E)')
         self.SetMenuBar(Menubar)
+
+        self.Bind(wx.EVT_MENU, self.ControlPanel, id=12)
 
         FileMenu3 = wx.Menu()
         FileMenu3.Append(8, 'オンラインマニュアル(&O)\tCtrl+O', 'このソフトウェアのオンラインマニュアルを表示')
@@ -353,6 +420,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.About, id=11)
 
         self.SetMenuBar(Menubar)
+
 
         #ステータスバー描画
         self.CreateStatusBar()
@@ -394,6 +462,7 @@ class MainWindow(wx.Frame):
         
 
         self.Show(True)
+        self.ControlPanel(True)
         app.SetTopWindow(self)
 
 
