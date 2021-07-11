@@ -1,0 +1,8 @@
+{
+    "name" : "ev3dev",
+    "version" : "1.0.0",
+    "author" : "Kenta Sui",
+    "language" : "Python",
+    "files" : ["InitialSettings.ini", "MotorSet.ini", "MotorRun.ini", "MotorTurn.ini", "SensorSet.ini"]
+
+}

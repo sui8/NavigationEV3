@@ -10,17 +10,18 @@ import configparser #Config(ini)読み込み用
 import subprocess #ファイルオープン用
 import webbrowser #ウェブブラウザーオープン用
 import math #計算用
+import json #JSONファイル管理
 
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev10" #バージョン
+Version = "3.0.0α-Dev11" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
 WindowRatio = [16, 9]
-SubWindowSize = [550, 480]
+AboutWindowSize = [550, 480]
 ControlWindowSize = [350, 500]
 
 FontSize = 10
@@ -44,6 +45,7 @@ CI_Ratio = []
 PrevPos = []
 NewPos= []
 RobotCounter = 0
+RobotMillageDatas = []
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
@@ -61,6 +63,7 @@ def ReScaleBitmap (Bitmap, Width, Height):
     Image = Image.Scale(Width, Height, wx.IMAGE_QUALITY_HIGH)
     Result = wx.BitmapFromImage(Image)
     return Result
+    
 
 '''---起動------------------------------------------'''
 
@@ -72,7 +75,8 @@ Debug("\n--Constants--")
 Debug("DisplayMax: {0}".format(DisplayMax))
 Debug("DisplayMin: {0}".format(DisplayMin))
 Debug("WindowRatio(Calculated): {0}".format(WindowRatio))
-Debug("SubWindowSize: {0}".format(SubWindowSize))
+Debug("AboutWindowSize: {0}".format(AboutWindowSize))
+Debug("ControlWindowSize: {0}".format(ControlWindowSize))
 Debug("FontSize: {0}".format(FontSize))
 Debug("ConfigPath: {0}".format(ConfigPath))
 
@@ -107,12 +111,15 @@ else:
         RobotImagePath = str(Config.get("RobotImagePath")) #ロボット画像パス
         HomePath = str(Config.get("HomePath")) #ホームディレクトリ
         DecimalDigit = int(Config.get("DecimalDigit")) #ロボット距離小数点以下桁数指定
+        TireRotationDecimalDigit = int(Config.get("TireRotationDecimalDigit")) #ロボット距離（タイヤ回転数）小数点以下桁数指定
         TireCircumference = float(Config.get("TireCircumference")) #タイヤ円周
         Debug("WindowSizeScale: {0}".format(WindowSizeScale))
         Debug("CourtImagePath: {0}".format(CourtImagePath))
         Debug("RobotImagePath: {0}".format(RobotImagePath))
         Debug("HomePath: {0}".format(HomePath))
         Debug("DecimalDegit: {0}".format(DecimalDigit))
+        Debug("TireRotationDecimalDegit: {0}".format(TireRotationDecimalDigit))
+        Debug("TireCircumference: {0}".format(TireCircumference))
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -157,7 +164,7 @@ Debug("HomeDirectory: {0}".format(HomeDirectory))
 #ソフトウェアについてタブ
 class AboutWindow(wx.Frame):
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title, size=(SubWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
+        wx.Frame.__init__(self, parent, title=title, size=(AboutWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
         Panel = wx.Panel(self, wx.ID_ANY)
 
@@ -199,7 +206,7 @@ class ControlWindow(wx.Frame):
 
     def EntryCopy(self, parent):
         EntryValue = C_TextEntry1.GetValue()
-        wx.TheClipboard(wx.TextDataObject(EntryValue))
+        wx.TheClipboard.SetData(wx.TextDataObject(EntryValue))
         Debug("> Entry value has been Copied.")
 
     #ウィンドウ
@@ -214,6 +221,7 @@ class ControlWindow(wx.Frame):
         C_TextEntry1 = wx.TextCtrl(Panel, wx.ID_ANY, style=wx.TE_MULTILINE, size=(325, 220), pos=(5, 30))
         
         LogCopy_Button = wx.Button(Panel, label="データコピー", pos=(205, 5), size=(60, 25))
+        #削除候補
         LogDelete_Button = wx.Button(Panel, label="履歴削除", pos=(270, 5), size=(60, 25))
 
         #ButtonにBind
@@ -234,7 +242,7 @@ class MainWindow(wx.Frame):
 
     #ファイルオープン
     def AskFileOpen(self, event):
-        FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
+        FileTypes = "NavigationEV3 ReWrite ファイル (*.nrp) |*.nrp|" "すべてのファイル (*.*) |*.*"
         OpenFileDialog = wx.FileDialog(frame, message="開く", wildcard=FileTypes, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 
         #ユーザーがキャンセルした場合、スルー
@@ -255,8 +263,8 @@ class MainWindow(wx.Frame):
 
     #ファイルの名前を付けて保存
     def NewFileSave(self, event):
-        FileTypes = "NavigationEV3 ReWrite ファイル (*.nrf) |*.nrf|" "すべてのファイル (*.*) |*.*"
-        SaveFileDialog = wx.FileDialog(frame, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        FileTypes = "NavigationEV3 ReWrite ファイル (*.nrp) |*.nrp|" "すべてのファイル (*.*) |*.*"
+        SaveFileDialog = wx.FileDialog(self, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
 
         #ユーザーがキャンセルした場合、スルー
         if SaveFileDialog.ShowModal() != wx.ID_OK:
@@ -265,6 +273,11 @@ class MainWindow(wx.Frame):
         SaveFilePath = SaveFileDialog.GetPath()
         wx.MessageDialog(None, "あなたの選択した保存先\n{0}\n※保存機能は未実装です".format(SaveFilePath), TitleName).ShowModal()
         SaveFileDialog.Destroy()
+
+    #全削除
+    def AllRobotsClear(self, event):
+        global C_TextEntry, RobotCounter, RobotMillageDatas
+        wx.MessageDialog(None, "全てのロボット位置情報あなたの選択した保存先\n{0}\n※保存機能は未実装です".format(SaveFilePath), TitleName).ShowModal()
 
     #オンラインマニュアル
     def OnlineUserGuide(self, event):
@@ -284,14 +297,161 @@ class MainWindow(wx.Frame):
         ControlWindow(self, TitleName + " ControlPanel")
         app.SetTopWindow(self)
 
+    #プログラミング言語での読み込み
+    def LoadLib(self, language):
+        global LibConfig, LibFiles
+        Debug("--LoadLib: {0} --".format(language))
+        
+        #LoadLib 各種変数
+        #・LibConfig...Config.json
+        #・LibFiles...Config.json内のfilesの中身
+        
+        if os.path.exists("Lib/{0}/Config.json".format(language)) != True:
+            Debug("[Error] LoadLib could not find the '{0}' library.".format(language))
+            Debug("-----------------")
+            Status = False
+            return Status
+            
+        else:
+            Debug("> LoadLib has successfully discovered the '{0}' library.".format(language))
+
+            #Config.jsonの読み込み
+            try:
+                with open("Lib/{0}/Config.json".format(language), 'r') as LibConfig:
+                    LibConfig = json.load(LibConfig)
+            except:
+                Debug("[Error] LoadLib could not read the Config.json of the '{0}' library.".format(language))
+                Debug("-----------------")
+                Status = False
+                return Status
+            else:
+                Debug("> LoadLib has successfully loaded Config.json of the '{0}' library.".format(language))
+
+                #Config.jsonの要素のチェック（エラーが起こった場合は"Unknown"と置く）
+                LibConfigElements = ["name", "version", "author", "language", "files"]
+
+                for i in LibConfigElements:
+                    try:
+                        LibConfigCheck = str(LibConfig[i])
+                    except:
+                        Debug("[Error] LoadLib could not load element '{1}' of Config.json of '{0}' library.".format(language, i))
+                        Debug("-----------------")
+                        LibConfig[i] = "Unknown"
+                        Debug("> {0}: {1}".format(i, LibConfig[i]))
+                    else:
+                        Debug("> {0}: {1}".format(i, LibConfig[i]))
+                
+
+                ##各種ライブラリファイル読み込み
+                LibFiles = {}
+
+                for i in range(len(LibConfig['files'])):
+                    LibFiles[str(LibConfig['files'][i])] = ""
+
+
+                for i in LibFiles.keys():
+
+                    #ファイルの有無を確認
+                    if os.path.exists("Lib/{0}/{1}".format(language, i)) != True:
+                        Debug("[Error] LoadLib could not find the file '{0}'.".format(i))
+                        Debug("-----------------")
+                        LoadStatus = False
+                        return LoadStatus
+                    else:
+                        #ファイル破損（内容があるか）確認
+                        try:
+                            with open("Lib/{0}/{1}".format(language, i), 'r', encoding='UTF-8') as f:
+                                LibFiles['{0}'.format(i)] = f.read()
+                        except:
+                            Debug("[Error] LoadLib could not load the file '{0}'.".format(i))
+                            Debug("-----------------")
+                            LoadStatus = False
+                            return LoadStatus
+                        else:
+                            Debug("> LoadLib has loaded the file '{0}'.".format(i))
+
+
+                Debug("> LoadLib has successfully loaded all files.")
+                Debug("-----------------")
+                                                
+                LoadStatus = True
+                return LoadStatus
+
+    #EV3devソースコードに変換
+    def ConvertToev3dev(self, event):
+        #プログラムない場合はスルー
+        if len(RobotMillageDatas) == 0:
+            wx.MessageDialog(None, "プログラムを作成してから実行してください", TitleName, style=wx.ICON_ERROR).ShowModal()
+            return
+        
+        #ファイル保存
+        FileTypes = "ev3dev プログラムファイル (*.py) |*.py|" "テキスト ドキュメント (*.txt) |*.txt|" "すべてのファイル (*.*) |*.*"
+        SaveFileDialog = wx.FileDialog(self, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+
+        #ユーザーがキャンセルした場合、スルー
+        if SaveFileDialog.ShowModal() != wx.ID_OK:
+            return
+
+        SaveFilePath = SaveFileDialog.GetPath()
+        SaveFileDialog.Destroy()
+        
+        #LoadLibでライブラリ読み込み
+        LoadStatus = self.LoadLib("ev3dev")
+
+        #正しくロード出来たかステータスチェック
+        if LoadStatus != True:
+            Debug("[Error] Could not load ev3dev library.")
+            wx.MessageDialog(None, "'ev3dev' ライブラリが破損しているため、プログラムの変換に失敗しました。", TitleName, style=wx.ICON_ERROR).ShowModal()
+            return
+        
+        else:
+            #プログラム書き込みスタート
+            RobotMillages = []
+            for i in range(len(RobotMillageDatas) - 1):
+                i += 1
+                RobotMillages.append(RobotMillageDatas[i][4])
+
+            ev3dev_Program = LibFiles['InitialSettings.ini'] + "\n" #初期設定
+            
+            ev3dev_Program += "\n"
+
+            ev3dev_Program += LibFiles['MotorSet.ini'].format("B", "Large") + "\n" #モーター設定
+            ev3dev_Program += LibFiles['MotorSet.ini'].format("C", "Large") + "\n" #モーター設定
+
+            ev3dev_Program += "\n"
+
+            #RobotMillagesに基づいて走るプログラム追加
+            for i in RobotMillages:
+                ev3dev_Program += LibFiles['MotorRun.ini'].format("B", i, 500, "break") + "\n"
+                ev3dev_Program += LibFiles['MotorRun.ini'].format("C", i, 500, "break") + "\n"
+
+                ev3dev_Program += "\n"
+
+            print(ev3dev_Program)
+
+            try:
+                with open(SaveFilePath, mode='w') as f:
+                    f.write(ev3dev_Program)
+            except:
+                wx.MessageDialog(None, "ファイルの保存に失敗しました。\n保存場所を確認してください。", TitleName, style=wx.ICON_ERROR).ShowModal()
+            else:
+                wx.MessageDialog(None, "プログラムの変換に成功しました", TitleName).ShowModal()
+                
+
+    #EV3RTソースコードに変換
+    def ConvertToEV3RT(self, event):
+        wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+
+
     ##ロボット画像処理関係
 
     #ロボット走行距離算出
     def MileageCal(self, PrevPos, NewPos):
-        global RobotCounter
-        AssumedDistanceX = NewPos[0] - PrevPos[0]
-        AssumedDistanceY = NewPos[1] - PrevPos[1]
-        
+        global RobotCounter, RobotMillageDatas, AssumedDistanceX, AssumedDistanceY, Dif
+        AssumedDistanceX = NewPos.x - PrevPos.x #X軸距離
+        AssumedDistanceY = NewPos.y - PrevPos.y #Y軸距離
+
+        #三平方の定理を使って距離を計算して、math関数で平方根に戻す（xの2乗*yの2乗=zの2乗）
         RobotMillage = math.sqrt(AssumedDistanceX * AssumedDistanceX + AssumedDistanceY * AssumedDistanceY)
 
         #走行距離計算と小数点以下処理
@@ -303,21 +463,39 @@ class MainWindow(wx.Frame):
 
 
         #タイヤ回転数と小数点以下処理
-        if DecimalDigit != -1:
-            TireRotation = round(RobotMillage / TireCircumference, DecimalDigit)
+        if TireRotationDecimalDigit != -1:
+            TireRotation = round(RobotMillage / TireCircumference, TireRotationDecimalDigit)
 
-            if DecimalDigit == 0:
+            if TireRotationDecimalDigit == 0:
                 TireRotation = math.floor(TireRotation)
 
-        C_TextEntry1.AppendText("{0}: X:{1} Y:{2} {3}に{4}度 距離:{5}mm タイヤ回転:{6}\n".format(RobotCounter, NewPos[0], NewPos[1], "右", "0", RobotMillage, TireRotation))
-        RobotCounter += 1
+        #進行距離ログを扱いやすいようにリストに格納しておく。いらなければ消す
+        
+        RobotAngle = 0 #今のみ0にしておく
+        RobotCounter += 1 #カウンター増加
+        RobotMillageDatas.append([RobotCounter, NewPos[0], NewPos[1], RobotAngle, RobotMillage, TireRotation])
+
+        if RobotAngle > 180:
+            RobotDirection = "左"
+
+        else:
+            RobotDirection = "右"
+            
+        C_TextEntry1.AppendText("{0}: X:{1} Y:{2} {3}に{4}度 距離:{5}mm タイヤ回転:{6}\n".format(RobotCounter, NewPos[0], NewPos[1], RobotDirection, 0, RobotMillage, TireRotation))
 
         Debug("RobotCounter: {0}".format(RobotCounter))
         Debug("RobotMillage: {0}".format(RobotMillage))
+        print(RobotMillageDatas)
+
+    #回転角度（絶対値）取得関数
+    def GetDirection(self, PrevPos, NewPos):
+        RobotDegree = math.degrees(math.atan2(AssumedDistanceX, AssumedDistanceY)) #絶対値計算
+        Debug("RobotDegree: {0}".format(RobotDegree))
+        return RobotDegree
 
     #クリックを検知する
     def onClick(self, event):
-        global PrevPos, NewPos
+        global PrevPos, NewPos, PrevDeg, NewDeg, RobotCounter
         CursorPos = event.GetPosition()
         
         #Y座標反転
@@ -328,19 +506,25 @@ class MainWindow(wx.Frame):
 
         #初回位置かどうか
 
-        if NewPos:
-            PrevPos = NewPos
-            NewPos = CursorPos
-
+        if RobotCounter > 1:
+            PrevPos = NewPos #一つ前の座標更新
+            NewPos = CursorPos #最新座標更新
+            PrevDeg = NewDeg #一つ前の角度更新
+            NewDeg = self.GetDirection(PrevPos, NewPos)
+            Dif = NewDeg - PrevDeg
         else:
             PrevPos = CursorPos
             NewPos = CursorPos
+            PrevDeg = 0
+            NewDeg = 0
+            Dif = 0
 
         self.MileageCal(PrevPos, NewPos)
+        Debug("Dif: {0}".format(Dif))
         
         #self.PaintRobot(CursorPos.x, CursorPos.y)
 
-    '''#ロボット画像描画
+    #ロボット画像描画
     def PaintRobot(self, RobotPosX, RobotPosY):
 
         RobotPanel = wx.Panel(self, wx.ID_ANY)
@@ -361,7 +545,7 @@ class MainWindow(wx.Frame):
         Layout2.Add(RI_Bitmap, 1, flag=wx.TOP)
         Layout.Add(Layout2, 1, flag=wx.CENTER)
 
-        RobotPanel.SetSizer(Layout)'''
+        RobotPanel.SetSizer(Layout)
 
 
     #---------------------------------------------------------------------
@@ -406,16 +590,27 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.ControlPanel, id=12)
 
         FileMenu3 = wx.Menu()
-        FileMenu3.Append(8, 'オンラインマニュアル(&O)\tCtrl+O', 'このソフトウェアのオンラインマニュアルを表示')
-        #FileMenu3.Append(9, 'マニュアル(&H)\tCtrl+H', 'このソフトウェアのオフラインマニュアルを表示')
-        FileMenu3.Append(10, 'アップデートのチェック(&U)\tCtrl+U', 'ソフトウェアのアップデートを確認')
+        FileMenu3.Append(13, 'ev3devソースコードに変換(&D)\tCtrl+D', 'プログラムをev3devプログラム（.py）に変換する')
+        FileMenu3.Append(14, 'EV3RTソースコードに変換(&R)\tCtrl+R', 'プログラムをEV3RTソースコード（.c）に変換する')
+        Menubar.Append(FileMenu3, 'ツール(&T)')
+
+        self.Bind(wx.EVT_MENU, self.ConvertToev3dev, id=13)
+        self.Bind(wx.EVT_MENU, self.ConvertToEV3RT, id=14)
+        
+        self.SetMenuBar(Menubar)
+
+
+        FileMenu4 = wx.Menu()
+        FileMenu4.Append(8, 'オンラインマニュアル(&O)\tCtrl+O', 'このソフトウェアのオンラインマニュアルを表示')
+        #FileMenu4.Append(9, 'マニュアル(&H)\tCtrl+H', 'このソフトウェアのオフラインマニュアルを表示')
+        FileMenu4.Append(10, 'アップデートのチェック(&U)\tCtrl+U', 'ソフトウェアのアップデートを確認')
 
         self.Bind(wx.EVT_MENU, self.OnlineUserGuide, id=8)
         #self.Bind(wx.EVT_MENU, self.OfflineUserGuide, id=9)
-        FileMenu3.AppendSeparator()
+        FileMenu4.AppendSeparator()
 
-        FileMenu3.Append(11, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示します')
-        Menubar.Append(FileMenu3, 'ヘルプ(&H)')
+        FileMenu4.Append(11, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示します')
+        Menubar.Append(FileMenu4, 'ヘルプ(&H)')
 
         self.Bind(wx.EVT_MENU, self.About, id=11)
 
@@ -441,6 +636,9 @@ class MainWindow(wx.Frame):
 
         #CI_Size[0] = (int(format(round(CI_Size[0] * DisplayMagnification, 0), ".0f")))
         #CI_Size[1] = (int(format(round(CI_Size[1] * DisplayMagnification, 0), ".0f")))
+
+        #CI_Size[0] = (int(format(round(CI_Size[0] * 1.405563689604685, 0), ".0f")))
+        #CI_Size[1] = (int(format(round(CI_Size[1] * 1.40625, 0), ".0f")))
         
         CI_Size[0] = CI_Size[0] - 28
 
