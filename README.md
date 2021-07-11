@@ -64,22 +64,23 @@ v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
 v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
 v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)  
 v3.0.0α~ Python 3.9.2 (Windows 10 Pro, ver20H2)  
-v3.0.0α-Dev11~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
+v3.0.0α-Dev10~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
+v3.0.0α-Dev11~ Python 3.9.6 (Windows 11 Pro, ver21H2 Insider Preview)  
 
 ## 動作環境  
 ### 最低スペック  
 Windows 8.1 32Bit  
 1280x720 ドットの解像度  
 （ソースコードからの実行時）Python 3.7.0  
-CPU: PAE、NX、およびSSE2をサポートする1 GHz以上  
+CPU: PAE、NX、およびSSE2をサポートする1GHz以上  
 RAM: 2GB  
 HDD空き容量: 1GB  
 
 ### 推奨スペック  
 Windows 10 64Bit Ver21H1  
 1920x1080 ドットの解像度（16:9推奨）  
-（ソースコードからの実行時）Python 3.9.5  
-CPU: PAE、NX、およびSSE2をサポートする2 GHz以上  
+（ソースコードからの実行時）Python 3.9.6  
+CPU: PAE、NX、およびSSE2をサポートする2GHz以上  
 RAM: 8GB  
 HDD・SSD空き容量: 10GB  
 
@@ -116,7 +117,8 @@ HDD・SSD空き容量: 10GB
 - [x] **v3.0.0α-Dev8** コート画像描画システム作成（未完成）、Config項目追加、解像度調整機能追加
 - [x] **v3.0.0α-Dev9** Configのtry except試験追加、ロボット走行距離算出機能追加
 - [x] **v3.0.0α-Dev10** コントールパネルウィンドウ作成、ロボット走行距離表示（Config指定可能）機能追加、Config項目追加  
-- [ ] **v3.0.0α-Dev11** コントロールパネル機能ボタン作成
+- [x] **v3.0.0α-Dev11** ライブラリを使用したプログラム変換機能作成（現在はev3devのみ対応・仮）、ロボット回転角度計算追加（未実装）
+- [ ] **v3.0.0α-Dev12** コントロールパネル機能ボタン作成  
 - [ ] **v3.0.0** 公式リリース
 - [ ] **v3.1.0** パック破損時の自動削除
 - [ ] **v3.2.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
