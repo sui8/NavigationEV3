@@ -1,7 +1,7 @@
 {
-    "name" : "ev3dev",
-    "version" : "1.0.0",
-    "author" : "Kenta Sui",
+    "name" : "ev3dev-package",
+    "version" : "1.0.1",
+    "author" : "Toshiaki Satou",
     "language" : "Python",
     "files" : ["InitialSettings.ini", "MotorSet.ini", "MotorRun.ini", "MotorTurn.ini", "SensorSet.ini"]
 

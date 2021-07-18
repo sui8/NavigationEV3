@@ -11,11 +11,12 @@ import subprocess #ファイルオープン用
 import webbrowser #ウェブブラウザーオープン用
 import math #計算用
 import json #JSONファイル管理
+import csv #.nrpファイル（csv）用
 
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev11" #バージョン
+Version = "3.0.0α-Dev12" #バージョン
 Developer = "© 2020-2021 Kenta Sui"
 
 DisplayMax = [1920, 1080]
@@ -46,6 +47,8 @@ PrevPos = []
 NewPos= []
 RobotCounter = 0
 RobotMillageDatas = []
+RI_Correct = []
+RobotImages = []
 
 #定数定義
 ConfigLoader = configparser.ConfigParser()
@@ -212,23 +215,25 @@ class ControlWindow(wx.Frame):
     #ウィンドウ
     def __init__(self, parent, title):
         global C_TextEntry1
-        wx.Frame.__init__(self, parent, title=title, size=(ControlWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
-        Panel = wx.Panel(self, wx.ID_ANY)
+        if self.FindWindowByName(title) is None:
+            wx.Frame.__init__(self, parent, title=title, size=(ControlWindowSize), style=wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
-        C_Text1 = wx.StaticText(Panel, -1, "○ロボット走行距離ログ", (5, 10))
-        C_Text2 = wx.StaticText(Panel, -1, "○機能パネル", (5, 260))
-        C_TextEntry1 = wx.TextCtrl(Panel, wx.ID_ANY, style=wx.TE_MULTILINE, size=(325, 220), pos=(5, 30))
-        
-        LogCopy_Button = wx.Button(Panel, label="データコピー", pos=(205, 5), size=(60, 25))
-        #削除候補
-        LogDelete_Button = wx.Button(Panel, label="履歴削除", pos=(270, 5), size=(60, 25))
+            Panel = wx.Panel(self, wx.ID_ANY)
 
-        #ButtonにBind
-        LogCopy_Button.Bind(wx.EVT_BUTTON, self.EntryCopy)
-        LogDelete_Button.Bind(wx.EVT_BUTTON, self.EntryClear)
-        
-        self.Show()
+            C_Text1 = wx.StaticText(Panel, -1, "○ロボット走行距離ログ", (5, 10))
+            C_Text2 = wx.StaticText(Panel, -1, "○機能パネル", (5, 260))
+            C_TextEntry1 = wx.TextCtrl(Panel, wx.ID_ANY, style=wx.TE_MULTILINE, size=(325, 220), pos=(5, 30))
+            
+            LogCopy_Button = wx.Button(Panel, label="データコピー", pos=(205, 5), size=(60, 25))
+            #削除候補
+            LogDelete_Button = wx.Button(Panel, label="履歴削除", pos=(270, 5), size=(60, 25))
+
+            #ButtonにBind
+            LogCopy_Button.Bind(wx.EVT_BUTTON, self.EntryCopy)
+            LogDelete_Button.Bind(wx.EVT_BUTTON, self.EntryClear)
+            
+            self.Show()
 
 
 #メインウィンドウ
@@ -255,7 +260,19 @@ class MainWindow(wx.Frame):
 
     #新規ファイル作成
     def NewFileCreate(self, event):
-        wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+        global RobotImages
+        if RobotImages:
+            Result = wx.MessageDialog(None, "現在の変更内容を破棄しますか？", TitleName, wx.YES_NO | wx.NO_DEFAULT | wx.ICON_EXCLAMATION).ShowModal()
+
+            if Result == wx.ID_YES:
+                RobotCounter = 0
+                RobotMillageDatas = []
+                ControlWindow.EntryClear("","")
+                    
+                for i in RobotImages:
+                    i.Destroy()
+
+                RobotImages = []
 
     #ファイル上書き
     def FileOverWrite(self, event):
@@ -263,6 +280,7 @@ class MainWindow(wx.Frame):
 
     #ファイルの名前を付けて保存
     def NewFileSave(self, event):
+        global RobotMillageDatas
         FileTypes = "NavigationEV3 ReWrite ファイル (*.nrp) |*.nrp|" "すべてのファイル (*.*) |*.*"
         SaveFileDialog = wx.FileDialog(self, message="名前を付けて保存", wildcard=FileTypes, style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
 
@@ -271,13 +289,30 @@ class MainWindow(wx.Frame):
             return
 
         SaveFilePath = SaveFileDialog.GetPath()
-        wx.MessageDialog(None, "あなたの選択した保存先\n{0}\n※保存機能は未実装です".format(SaveFilePath), TitleName).ShowModal()
+
+        #.nrpとして保存
+        with open(SaveFilePath, "w", encoding="UTF-8") as f:
+            NRPWriter = csv.writer(f, lineterminator="\n") #writerオブジェクトの作成（改行記号で行を区切る）
+            NRPWriter.writerows(RobotMillageDatas) #csvファイルに書き込み
+            
+        wx.MessageDialog(None, "プログラムファイルを\n{0}\nに保存しました。".format(SaveFilePath), TitleName).ShowModal()
         SaveFileDialog.Destroy()
 
     #全削除
     def AllRobotsClear(self, event):
-        global C_TextEntry, RobotCounter, RobotMillageDatas
-        wx.MessageDialog(None, "全てのロボット位置情報あなたの選択した保存先\n{0}\n※保存機能は未実装です".format(SaveFilePath), TitleName).ShowModal()
+        global RobotCounter, RobotMillageDatas, RobotImages
+        Result = wx.MessageDialog(None, "全てのロボット位置情報を削除しますか？", TitleName, wx.YES_NO | wx.NO_DEFAULT | wx.ICON_EXCLAMATION).ShowModal()
+
+        if Result == wx.ID_YES:
+            RobotCounter = 0
+            RobotMillageDatas = []
+            ControlWindow.EntryClear("","")
+                
+            for i in RobotImages:
+                i.Destroy()
+
+            RobotImages = []
+
 
     #オンラインマニュアル
     def OnlineUserGuide(self, event):
@@ -422,8 +457,8 @@ class MainWindow(wx.Frame):
 
             #RobotMillagesに基づいて走るプログラム追加
             for i in RobotMillages:
-                ev3dev_Program += LibFiles['MotorRun.ini'].format("B", i, 500, "break") + "\n"
-                ev3dev_Program += LibFiles['MotorRun.ini'].format("C", i, 500, "break") + "\n"
+                ev3dev_Program += LibFiles['MotorRun.ini'].format("B", i, 500, "brake") + "\n"
+                ev3dev_Program += LibFiles['MotorRun.ini'].format("C", i, 500, "brake") + "\n"
 
                 ev3dev_Program += "\n"
 
@@ -447,7 +482,7 @@ class MainWindow(wx.Frame):
 
     #ロボット走行距離算出
     def MileageCal(self, PrevPos, NewPos):
-        global RobotCounter, RobotMillageDatas, AssumedDistanceX, AssumedDistanceY, Dif
+        global RobotCounter, RobotMillageDatas, Dif
         AssumedDistanceX = NewPos.x - PrevPos.x #X軸距離
         AssumedDistanceY = NewPos.y - PrevPos.y #Y軸距離
 
@@ -472,7 +507,7 @@ class MainWindow(wx.Frame):
         #進行距離ログを扱いやすいようにリストに格納しておく。いらなければ消す
         
         RobotAngle = 0 #今のみ0にしておく
-        RobotCounter += 1 #カウンター増加
+        #RobotCounter += 1 #カウンター増加
         RobotMillageDatas.append([RobotCounter, NewPos[0], NewPos[1], RobotAngle, RobotMillage, TireRotation])
 
         if RobotAngle > 180:
@@ -489,16 +524,23 @@ class MainWindow(wx.Frame):
 
     #回転角度（絶対値）取得関数
     def GetDirection(self, PrevPos, NewPos):
-        RobotDegree = math.degrees(math.atan2(AssumedDistanceX, AssumedDistanceY)) #絶対値計算
+        AssumedDistanceX = NewPos.x - PrevPos.x #X軸距離
+        AssumedDistanceY = NewPos.y - PrevPos.y #Y軸距離
+        
+        RobotDegree = math.degrees(math.atan2(AssumedDistanceY, AssumedDistanceX)) #絶対値計算
         Debug("RobotDegree: {0}".format(RobotDegree))
         return RobotDegree
 
     #クリックを検知する
     def onClick(self, event):
         global PrevPos, NewPos, PrevDeg, NewDeg, RobotCounter
+        #カーソル位置取得
         CursorPos = event.GetPosition()
+
+        RobotCounter += 1
         
         #Y座標反転
+        DefaultCursorPosY = CursorPos.y
         CursorPos.y = CI_Size.y - CursorPos.y
 
         Debug("> onClick: ({0}, {1})".format(CursorPos.x, CursorPos.y))
@@ -511,7 +553,7 @@ class MainWindow(wx.Frame):
             NewPos = CursorPos #最新座標更新
             PrevDeg = NewDeg #一つ前の角度更新
             NewDeg = self.GetDirection(PrevPos, NewPos)
-            Dif = NewDeg - PrevDeg
+            Dif = PrevDeg - NewDeg
         else:
             PrevPos = CursorPos
             NewPos = CursorPos
@@ -522,37 +564,24 @@ class MainWindow(wx.Frame):
         self.MileageCal(PrevPos, NewPos)
         Debug("Dif: {0}".format(Dif))
         
-        #self.PaintRobot(CursorPos.x, CursorPos.y)
+        self.PaintRobot(CursorPos.x, DefaultCursorPosY)
 
     #ロボット画像描画
     def PaintRobot(self, RobotPosX, RobotPosY):
+        global RobotImages
 
-        RobotPanel = wx.Panel(self, wx.ID_ANY)
+        RobotPosX -= RI_Correct[0]
+        RobotPosY -= RI_Correct[1]
         
-        RobotImage = wx.Image(RobotImagePath)
-        RI_Size = RobotImage.GetSize() #○○○x○○○用の画像で読み込み
-        Debug("RobotImageSize: {0}".format(RI_Size))
+        RobotImages.append(wx.StaticBitmap(self, wx.ID_ANY, RobotImage.ConvertToBitmap(), pos=(RobotPosX, RobotPosY)))
 
-        RI_Size[0] = int(format(round(RI_Size[0] / DisplayMagnification, 0), ".0f"))
-        RI_Size[1] = int(format(round(RI_Size[1] / DisplayMagnification, 0), ".0f"))
-        Debug("RobotImageReScale: {0}".format(RI_Size))
-        
-        RobotImage = RobotImage.Rescale(RI_Size[0], RI_Size[1], quality=wx.IMAGE_QUALITY_HIGH)
-        RI_Bitmap = wx.StaticBitmap(RobotPanel, -1, RobotImage.ConvertToBitmap(), pos=(RobotPosX, RobotPosY), size=RobotImage.GetSize())
-
-        Layout = wx.BoxSizer(wx.VERTICAL)
-        Layout2 = wx.BoxSizer(wx.HORIZONTAL)
-        Layout2.Add(RI_Bitmap, 1, flag=wx.TOP)
-        Layout.Add(Layout2, 1, flag=wx.CENTER)
-
-        RobotPanel.SetSizer(Layout)
 
 
     #---------------------------------------------------------------------
 
     #メインウィンドウ（最大化とサイズ変更のみ無効化）
     def __init__(self, title):
-        global CI_Size
+        global CI_Size, RobotPanel, RobotImage, RI_Size, RI_Correct
         #global frame
         #frame = wx.Frame(None, -1, "{0} Ver {1}".format(TitleName, Version), size=(WindowSizeX,WindowSizeY), style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
         wx.Frame.__init__(self, None, -1, title, size=(WindowSizeX,WindowSizeY), style=wx.MINIMIZE_BOX | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
@@ -587,6 +616,7 @@ class MainWindow(wx.Frame):
         Menubar.Append(FileMenu2, '編集(&E)')
         self.SetMenuBar(Menubar)
 
+        self.Bind(wx.EVT_MENU, self.AllRobotsClear, id=7)
         self.Bind(wx.EVT_MENU, self.ControlPanel, id=12)
 
         FileMenu3 = wx.Menu()
@@ -620,6 +650,9 @@ class MainWindow(wx.Frame):
         #ステータスバー描画
         self.CreateStatusBar()
         #self.SetStatusText("起動完了")
+
+        #キーバインド
+        #self.Bind(wx.EVT_KEY_DOWN, self.on_leave_window)
 
         '''---コート画像描画-----------------------------------------'''
 
@@ -657,8 +690,18 @@ class MainWindow(wx.Frame):
         CI_Bitmap.Bind(wx.EVT_LEFT_UP, self.onClick)
 
         Panel.SetSizer(Layout)
-        
 
+        '''---ロボット画像描画---------------------------------------'''
+        
+        RobotImage = wx.Image(RobotImagePath)
+        RI_Size = RobotImage.GetSize() #○○○x○○○用の画像で読み込み
+        RI_Correct.append(int(format(round((RI_Size[0] / 2), 0), '.0f')))
+        RI_Correct.append(int(format(round((RI_Size[1] / 2), 0), '.0f')))
+        
+        Debug("RobotImageSize: {0}".format(RI_Size))
+        Debug("RobotImageCorrection: {0}".format(RI_Correct))
+
+        
         self.Show(True)
         self.ControlPanel(True)
         app.SetTopWindow(self)
