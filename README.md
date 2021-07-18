@@ -16,7 +16,8 @@ v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)
 v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
 v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)  
 v3.0.0α~ Python 3.9.2 (Windows 10 Pro, ver20H2)  
-v3.0.0α-Dev11~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
+v3.0.0α-Dev10~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
+v3.0.0α-Dev11~ Python 3.9.6 (Windows 11 Pro, ver21H2 Insider Preview)  
 
 ## Operating environment    
 ### Minimum specs  
@@ -30,7 +31,7 @@ HDD free space: 1GB
 ### Recommended specs  
 Windows 10 64Bit Ver21H1  
 1920x1080 dot resolution  
-(When running from source code) Python 3.9.5  
+(When running from source code) Python 3.9.6  
 CPU: 2 GHz or higher, supporting PAE, NX, and SSE2  
 RAM: 8GB  
 HDD/SSD free space: 10GB  
@@ -85,7 +86,7 @@ RAM: 8GB
 HDD・SSD空き容量: 10GB  
 
 ### 動作確認済みスペック（推奨ではない）  
-Windows 11 64Bit Ver21H2 Build 22000.65 (Insider Preview)  
+Windows 11 64Bit Ver21H2 Build 22000.71 (Insider Preview)  
 1920x1080 ドットの解像度（16:9推奨）  
 （ソースコードからの実行時）Python 3.9.6  
 CPU: PAE、NX、およびSSE2をサポートする3.6GHz  
@@ -98,8 +99,8 @@ SSD空き容量: 680GB
 ・ロボット回転、削除（全削除）、位置調整可能  
 ・ロボットタイヤ径変更可能  
 ・距離と角度のテキストファイル出力  
-・.ngd（Navigation Data）形式でロボットの位置保存  
-・.ngdファイルの読み込みとコート状態復元  
+・.nrp（NavigationEV3 ReWrite Program）形式でロボットの位置保存  
+・.nrpファイルの読み込みとコート状態復元  
 ・.ncp（Navigation Cort Pack）形式でコート情報読み込み可能  
 ・Cort Pack管理画面でパックの追加、削除、変更、一覧  
 ・Configを使用し設定変更可能  
@@ -126,7 +127,8 @@ SSD空き容量: 680GB
 - [x] **v3.0.0α-Dev9** Configのtry except試験追加、ロボット走行距離算出機能追加
 - [x] **v3.0.0α-Dev10** コントールパネルウィンドウ作成、ロボット走行距離表示（Config指定可能）機能追加、Config項目追加  
 - [x] **v3.0.0α-Dev11** ライブラリを使用したプログラム変換機能作成（現在はev3devのみ対応・仮）、ロボット回転角度計算追加（未実装）
-- [ ] **v3.0.0α-Dev12** コントロールパネル機能ボタン作成  
+- [x] **v3.0.0α-Dev12** プログラムの名前を付けて保存機能実装、ロボット画像の描画システム実装（簡易）、ロボット位置と画像全削除機能実装、ev3devライブラリの修正（v1.0.1）
+- [ ] **v3.0.0α-Dev13** コントロールパネル機能ボタン作成  
 - [ ] **v3.0.0** 公式リリース
 - [ ] **v3.1.0** パック破損時の自動削除
 - [ ] **v4.0.0** ncp破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
