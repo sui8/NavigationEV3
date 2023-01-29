@@ -1,59 +1,10 @@
 # NavigationEV3
-# (English)
-NavigationEV3 helps control EV3. In addition, it is possible to control other robots by changing the parameters.
+NavigationEV3を使用すると、簡単にEV3を制御することが可能です。  
 
-### What Can I do?  
-The sophisticated GUI allows you to intuitively place robots and control the EV3.  
-!!THIS SOFTWARE OR SOURCE CODE WILL NOT BE DISTRIBUTED TO THE GENERAL PUBLIC FREE OF CHARGE IN ANY CASE. CONTACT ME TO PURCHASE FOR A FEE (CONDITIONALLY). WE ALSO ACCEPT DONATIONS!!
-
-### Main language and environment  
-v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
-v1.12.0~ Python 3.8.3rc1 (Windows 10 Pro,ver1909)  
-v1.16.1~ Python 3.8.3 (Windows 10 Pro,ver2004)  
-v2.1.3~ Python 3.8.4rc1 (Windows 10 Pro, ver2004)  
-v2.1.4~ Python 3.8.4 (Windows 10 Pro, ver2004)  
-v2.1.5~ Python 3.8.5 (Windows 10 Pro, ver2004)  
-v2.3.0~ Python 3.8.6 (Windows 10 Pro, ver2004)  
-v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)  
-v3.0.0α~ Python 3.9.2 (Windows 10 Pro, ver20H2)  
-v3.0.0α-Dev10~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
-v3.0.0α-Dev11~ Python 3.9.6 (Windows 11 Pro, ver21H2 Insider Preview)  
-
-## Operating environment    
-### Minimum specs  
-Windows 8.1 32Bit  
-1280x720 dot resolution (16:9 recommended)  
-(When running from source code) Python 3.7.0    
-CPU: PAE, NX, and SSE2 support, 1 GHz and above  
-RAM: 2GB  
-HDD free space: 1GB  
-
-### Recommended specs  
-Windows 10 64Bit Ver21H1  
-1920x1080 dot resolution  
-(When running from source code) Python 3.9.6  
-CPU: 2 GHz or higher, supporting PAE, NX, and SSE2  
-RAM: 8GB  
-HDD/SSD free space: 10GB  
-
-## List of Functions
-・ Automatically calculates the distance and angle just by placing the robot  
-・ Robot rotation, deletion (all deletion), position adjustment possible  
-・ Robot tire diameter can be changed  
-・ Text file output of distance and angle  
-・ Saving robot position in .ngd (Navigation Data) format  
-・ Reading .ngd file and restoring court status  
-・ Coat information can be read in .ncp (Navigation Cort Pack) format Add, delete, change, and list packs on the Cort Pack management screen  
-・ Settings can be changed using Config  
-・ Visual operation with control panel  
-
-
-# (日本語)
-NavigationEV3を使用すると、簡単にEV3を制御することが可能です。
+(Sorry. This software does not support English.)  
 
 ### どのように使用するか  
-洗練されたGUIで、直感的にロボットを配置。たったそれだけで距離と角度が自動算出されます。これをEV3に送信することで、簡単にロボットを操作。  
-注意！ このソフトウェア又はソースコードはいかなる場合があろうと無償一般配布されません。
+洗練されたGUIで、直感的にロボットを配置します。たったそれだけで距離と角度が自動算出されます。これをEV3に送信することで、簡単にロボットを操作することが可能です。  
 
 ### メインの開発言語・環境  
 v1.0.0~ Python 3.8.2 (Windows 10 Pro,ver1909)  
@@ -67,52 +18,59 @@ v2.4.0~ Python 3.9.0 (Windows 10 Pro, ver2004)
 v3.0.0α~ Python 3.9.2 (Windows 10 Pro, ver20H2)  
 v3.0.0α-Dev10~ Python 3.9.5 (Windows 10 Pro, ver21H1)  
 v3.0.0α-Dev11~ Python 3.9.6 (Windows 11 Pro, ver21H2 Insider Preview)  
+v3.0.0α-Dev13~ Python 3.10.9 (Windows 11 Pro, ver22H2)
 
 ## 動作環境  
 ### 最低スペック  
-Windows 8.1 32Bit  
+Windows 10 32Bit Ver 1507  
 1280x720 ドットの解像度  
-（ソースコードからの実行時）Python 3.7.0  
+(ソースコードからの実行時) Python 3.7.0  
 CPU: PAE、NX、およびSSE2をサポートする1GHz以上  
 RAM: 2GB  
 HDD空き容量: 1GB  
 
 ### 推奨スペック  
-Windows 10 64Bit Ver21H1  
-1920x1080 ドットの解像度（16:9推奨）  
-（ソースコードからの実行時）Python 3.9.6  
+Windows 11 Ver 22H2  
+1920x1080 ドットの解像度 (16:9推奨)  
+(ソースコードからの実行時) Python 3.10.9  
 CPU: PAE、NX、およびSSE2をサポートする2GHz以上  
 RAM: 8GB  
 HDD・SSD空き容量: 10GB  
 
-### 動作確認済みスペック（推奨ではない）  
-Windows 11 64Bit Ver21H2 Build 22000.120 (Insider Preview)  
-1920x1080 ドットの解像度（16:9推奨）  
-（ソースコードからの実行時）Python 3.9.6  
+### 動作確認済みスペック (非推奨)    
+Windows 11 Ver 22H2 Build 22621.1194 (Insider Preview)  
+1920x1080 ドットの解像度 (16:9推奨)  
+(ソースコードからの実行時) Python 3.10.9  
 CPU: AMD Ryzen 5 2600X (3.6GHz)  
 RAM: 48GB  
 SSD空き容量: 700GB  
 
+## 必須ライブラリ
+Pillow==9.3.0  
+wxPython==4.2.0  
+
+## ライセンス
+このソフトウェアを無断でダウンロード・改変・再配布をすることは禁止されています。  
+Unauthorized downloading, modification, or redistribution of this software is prohibited.  
 
 ## 機能一覧
 ・ロボットを配置するだけで自動で距離と角度を算出  
 ・ロボット回転、削除（全削除）、位置調整可能  
 ・ロボットタイヤ径変更可能  
 ・距離と角度のテキストファイル出力  
-・.nrp（NavigationEV3 ReWrite Program）形式でロボットの位置保存  
+・.nrp (NavigationEV3 ReWrite Program) 形式でロボットの位置保存  
 ・.nrpファイルの読み込みとコート状態復元  
-・.nrc（NavigationEV3 ReWrite Courtpack）形式でコート情報読み込み可能  
-・Cort Pack管理画面でパックの追加、削除、変更、一覧  
+・.nrc (NavigationEV3 ReWrite Courtpack) 形式でコート情報読み込み可能  
 ・Configを使用し設定変更可能  
 ・コントロールパネルで視覚的な操作  
 
 
-# Change Logs (変更点)  
+# アップデート履歴  
 ### 説明
 - [ ] 計画中のバージョン
 - [x] 実装済みバージョン
 
-### バージョン履歴（v3.0.0α～）
+### バージョン履歴 (v3.0.0α～)
 - [x] **v3.0.0α** NavigationEV3 ReWrite アルファリリース
 - [x] **v3.0.0α-Dev1** システム作成
 - [x] **v3.0.0α-Dev2** ツールバー作成
@@ -128,38 +86,37 @@ SSD空き容量: 700GB
 - [x] **v3.0.0α-Dev10** コントールパネルウィンドウ作成、ロボット走行距離表示（Config指定可能）機能追加、Config項目追加  
 - [x] **v3.0.0α-Dev11** ライブラリを使用したプログラム変換機能作成（現在はev3devのみ対応・仮）、ロボット回転角度計算追加（未実装）
 - [x] **v3.0.0α-Dev12** プログラムの名前を付けて保存機能実装、ロボット画像の描画システム実装（簡易）、ロボット位置と画像全削除機能実装、ev3devライブラリの修正（v1.0.1）
-- [ ] **v3.0.0α-Dev13** コントロールパネル機能ボタン作成  
+- [x] **v3.0.0α-Dev13** .ncpへの対応、エラー対策機能修正、
+- [ ] **v3.0.0α-Dev14** コントロールパネル機能ボタン作成  
 - [ ] **v3.0.0** 公式リリース
-- [ ] **v3.1.0** パック破損時の自動削除
-- [ ] **v4.0.0** nrc破損修復設定、ロボット画像変更可能化、パック破損時の自動削除パック削除機能追加<破損していない場合に限る>
-- [ ] **v5.0.0** 本ソフトからev3devへのプログラム転送と権限付与
-- [ ] **v6.0.0** 簡易的なライントレース対応
-- [ ] **v7.0.0** 滑らかな曲線対応
-- [ ] **v8.0.0** バグ修正、コード簡略化、追加機能完成、NavigationEV3 ReWrite開発終了
+- [ ] **v3.1.0** ロボット画像変更機能追加
+- [ ] **v4.0.0** ソフトからev3devへのプログラム転送と権限付与
+- [ ] **v5.0.0** 簡易的なライントレース対応
+- [ ] **v6.0.0** 滑らかな曲線対応
+- [ ] **v7.0.0** バグ修正、コード簡略化、追加機能完成、NavigationEV3 ReWrite開発終了
 
-### バージョン履歴（v1.0.0～v2.4.0）
-- [x] **v1.0.0** リリース (Release)
-- [x] **v1.1.0** 大幅な機能追加1 (Substantial function addition 1)
-- [x] **v1.2.0** 大幅な機能追加2 (Substantial function addition 2)
-- [x] **v1.3.0** 大幅な機能追加3 (Substantial function addition 3)
-- [x] **v1.4.0** 大幅な機能追加4 (Substantial function addition 4)
-- [x] **v1.5.0** 大幅な機能追加5 (Substantial function addition 5)
-- [x] **v1.6.0** 大幅な機能追加6 (Substantial function addition 6)
-- [x] **v1.7.0** コントロールパネルの更新 (Control panel updates)
-- [x] **v1.8.0** ロボット画像変更、高精度化 (Robot image change, high precision)
-- [x] **v1.9.0** 保存・タイヤ径など大幅変更 (Save and change tire diameter etc.)
-- [x] **v1.9.1** Spinbox修正 (Spinbox fix)
-- [x] **v1.9.2** ttkの定義変更 (Change ttk definition)
-- [x] **v1.10.0** ウィンドウ縮小機能追加 (Window reduction function added)
-- [x] **v1.10.1** ボタン配置変更、設定廃止 (Change button layout, abolish settings)
-- [x] **v1.11.0** 線を上に描画、出力認識向上、角度変更機能、OpenCVによる画像角度自由化
-                  (Drawing lines on top, improving output recognition, angle change function, image angle liberalization by OpenCV)
-- [x] **v1.11.1** アイコン追加、一部画像パス指定定数定義作成、コード簡略化 (Icon addition, partial image path specification constant definition creation, code simplification)
-- [x] **v1.12.0** Config.iniから設定を読み込む機能実装<文字型取得と存在しない時に問題あり> (Functional implementation to read the settings from Config.ini <There is a problem when there is no character type acquisition>)
-- [x] **v1.12.1** コート画像選択式の準備<存在しないときにエラー発生中> (Preparation of coat image selection formula <error occurs when it does not exist>)
-- [x] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能・Configに移行？> (It is possible to select whether to display the version in the window settings <Only within Debug ・Move to Config? >)
-- [x] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定> (Replace the default image when the coat image does not exist.)
-- [x] **v1.13.0** .ncpパッケージ仮対応、データをドキュメントフォルダ格納式に変更 (英語版バージョン履歴廃止/English version history abolished)
+### バージョン履歴 (v1.0.0～v2.4.0)
+- [x] **v1.0.0** リリース  
+- [x] **v1.1.0** 大幅な機能追加1  
+- [x] **v1.2.0** 大幅な機能追加2  
+- [x] **v1.3.0** 大幅な機能追加3  
+- [x] **v1.4.0** 大幅な機能追加4  
+- [x] **v1.5.0** 大幅な機能追加5  
+- [x] **v1.6.0** 大幅な機能追加6  
+- [x] **v1.7.0** コントロールパネルの更新  
+- [x] **v1.8.0** ロボット画像変更、高精度化  
+- [x] **v1.9.0** 保存・タイヤ径など大幅変更  
+- [x] **v1.9.1** Spinbox修正  
+- [x] **v1.9.2** ttkの定義変更  
+- [x] **v1.10.0** ウィンドウ縮小機能追加  
+- [x] **v1.10.1** ボタン配置変更、設定廃止  
+- [x] **v1.11.0** 線を上に描画、出力認識向上、角度変更機能、OpenCVによる画像角度自由化  
+- [x] **v1.11.1** アイコン追加、一部画像パス指定定数定義作成、コード簡略化  
+- [x] **v1.12.0** Config.iniから設定を読み込む機能実装<文字型取得と存在しない時に問題あり>  
+- [x] **v1.12.1** コート画像選択式の準備<存在しないときにエラー発生中>  
+- [x] **v1.12.2** ウィンドウ設定にバージョンを表示するかを選択可能に<Debug内のみ可能・Configに移行？>  
+- [x] **v1.12.3** コート画像が存在しない時、デフォルト画像に差し替える<デフォルト画像紛失時の対処未定>  
+- [x] **v1.13.0** .ncpパッケージ仮対応、データをドキュメントフォルダ格納式に変更  
 - [x] **v1.14.0** .ncpパッケージ対応<解凍・重複防止など>
 - [x] **v1.14.1** .ncpの解凍システムのミス修正<重複防止含む>
 - [x] **v1.15.0** .ncpパッケージ管理タブ作成<変更・削除・一覧機能追加予定>

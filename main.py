@@ -16,8 +16,8 @@ import csv #.nrpファイル（csv）用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev12" #バージョン
-Developer = "© 2020-2021 Kenta Sui"
+Version = "3.0.0α-Dev13" #バージョン
+Developer = "© 2020-2023 Kenta Sui"
 
 DisplayMax = [1920, 1080]
 DisplayMin = [1280, 720]
@@ -30,12 +30,15 @@ ConfigPath = "Config/Config.ini"
 
 DebugOutput = True #デバッグ情報を出力するか
 
-DefaultHomePath = "C:"
-DefaultCourtImagePath = "Data/New2.png"
 DefaultRobotImagePath = "Data/Robot.png"
 
+PackagePath = "Packages" #パッケージが入るフォルダ指定
+DefaultPackage = "Data/Default" #デフォルトパッケージパスと名前を指定
+DefaultPackageCI = "Court.png" #パッケージ内のCourtImageの名前指定
+DefaultPackageInfo = "Config.ini" #パッケージ内のPackageInfoの名前指定
+
 UserGuideURL = "https://example.com"
-UserGuidePath = "Data/UserGuide.txt"
+UserGuidePath = "Data/UserGuide.txt" #オフラインユーザーガイドのパス指定
 
 '''----定義・初期設定等---------------------------------------'''
 
@@ -110,19 +113,19 @@ else:
         Debug("\n> The configuration file has been successfully loaded.")
         Debug("\n--User defined constants(Config)--")
 
-        CourtImagePath = str(Config.get("CourtImagePath")) #コート画像パス
         RobotImagePath = str(Config.get("RobotImagePath")) #ロボット画像パス
-        HomePath = str(Config.get("HomePath")) #ホームディレクトリ
+        Package = str(Config.get("Package")) #コートパック指定
         DecimalDigit = int(Config.get("DecimalDigit")) #ロボット距離小数点以下桁数指定
         TireRotationDecimalDigit = int(Config.get("TireRotationDecimalDigit")) #ロボット距離（タイヤ回転数）小数点以下桁数指定
         TireCircumference = float(Config.get("TireCircumference")) #タイヤ円周
+        
         Debug("WindowSizeScale: {0}".format(WindowSizeScale))
-        Debug("CourtImagePath: {0}".format(CourtImagePath))
         Debug("RobotImagePath: {0}".format(RobotImagePath))
-        Debug("HomePath: {0}".format(HomePath))
+        Debug("Package: {0}".format(Package))
         Debug("DecimalDegit: {0}".format(DecimalDigit))
         Debug("TireRotationDecimalDegit: {0}".format(TireRotationDecimalDigit))
         Debug("TireCircumference: {0}".format(TireCircumference))
+
 
 #画面比率計算と補正後ウィンドウサイズ算出（16:9）
 if DisplaySize[0] / DisplaySize[1] == WindowRatio: #画面比率が16:9の時（何もせず代入）
@@ -147,19 +150,62 @@ WindowSizeY = (int(format(round(WindowSizeY * WindowSizeScale, 0), ".0f")))
 Debug("WindowSize: [{0}, {1}]".format(WindowSizeX, WindowSizeY))
 
 
-#ホームディレクトリ取得（ユーザー）
-HomeDirectory = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + "\\" + HomePath
 
-#指定されたディレクトリが
-if not os.path.exists(HomeDirectory):
-    HomeDirectory = DefaultHomePath
-    Debug("[Error] The specified path could not be found. Use the default directory.")
+#指定されたパッケージが存在するか
+if not os.path.isfile("{0}/{1}.ncp".format(PackagePath, Package)):
+    Package = "Default"
+    Debug("[Error] Could not find the package. Use the default package.")
 
-elif not os.path.isdir(HomeDirectory):
-    HomeDirectory = DefaultHomePath
-    Debug("[Error] The specified path is not a directory. Use the default directory.")
+# zipファイルに含まれているテキストファイルの読み込み（エラー対策済）
+try:
+    with zipfile.ZipFile("{0}/{1}.ncp".format(PackagePath, Package)) as ncp:
+        with ncp.open(DefaultPackageInfo) as ncp_info:
+            ConfigLoader.read(ncp_info, encoding="utf-8")
+            Config = ConfigLoader["Settings"]
+            PackageName = str(Config.get("PackageName"))
 
-Debug("HomeDirectory: {0}".format(HomeDirectory))
+except Exception as e:
+    Debug("[Error] Could not load PackageInfo in the package. Use the default package.")
+    Debug(e)
+
+    try:
+        with zipfile.ZipFile("{0}.ncp".format(DefaultPackage)) as ncp:
+            with ncp.open(DefaultPackageInfo) as ncp_info:
+                ConfigLoader.read(ncp_info, encoding="utf-8")
+                Config = ConfigLoader["Settings"]
+                PackageName = str(Config.get("PackageName"))
+
+    except Exception as e:
+        app = wx.App()
+        wx.MessageDialog(None, "回復不能なエラーが発生しました。ソフトウェアを再インストールしてください。\n[Error: PackageInfo in the 'Default' package is missing or corrupt.]", TitleName, style=wx.ICON_ERROR).ShowModal()
+        Debug("[Error] Default package is damaged.")
+        Debug(e)
+        sys.exit()
+
+# zipファイルに含まれているコートファイルの読み込み（エラー対策済）
+try:
+    with zipfile.ZipFile("{0}/{1}.ncp".format(PackagePath, Package)) as ncp:
+        ncp.extract(member=DefaultPackageCI, path="{0}/".format(PackagePath))
+        CourtImagePath = "{0}/{1}".format(PackagePath, DefaultPackageCI)
+
+except Exception as e:
+    Debug("[Error] Could not load CourtImage in the package. Use the default package.")
+    Debug(e)
+
+    try:
+        with zipfile.ZipFile("{0}.ncp".format(DefaultPackage)) as ncp:
+            ncp.extract(member=DefaultPackageCI, path="{0}/".format(PackagePath))
+            CourtImagePath = "{0}/{1}".format(PackagePath, DefaultPackageCI)
+
+    except Exception as e:
+        app = wx.App()
+        wx.MessageDialog(None, "回復不能なエラーが発生しました。ソフトウェアを再インストールしてください。\n[Error: PackageInfo in the 'Default' package is missing or corrupt.]", TitleName, style=wx.ICON_ERROR).ShowModal()
+        Debug("[Error] Default package is damaged.")
+        Debug(e)
+        sys.exit()
+
+
+#Debug("HomeDirectory: {0}".format(HomeDirectory))
 
 
 '''---ウィンドウ別クラス（メイン）----------------------------------------'''
@@ -248,7 +294,7 @@ class MainWindow(wx.Frame):
     #ファイルオープン
     def AskFileOpen(self, event):
         FileTypes = "NavigationEV3 ReWrite ファイル (*.nrp) |*.nrp|" "すべてのファイル (*.*) |*.*"
-        OpenFileDialog = wx.FileDialog(frame, message="開く", wildcard=FileTypes, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        OpenFileDialog = wx.FileDialog(self, message="開く", wildcard=FileTypes, style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 
         #ユーザーがキャンセルした場合、スルー
         if OpenFileDialog.ShowModal() != wx.ID_OK:
@@ -478,6 +524,11 @@ class MainWindow(wx.Frame):
         wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
 
 
+    #アップデートの確認
+    def CheckUpdate(self, event):
+        wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+
+
     ##ロボット画像処理関係
 
     #ロボット走行距離算出
@@ -516,7 +567,11 @@ class MainWindow(wx.Frame):
         else:
             RobotDirection = "右"
             
-        C_TextEntry1.AppendText("{0}: X:{1} Y:{2} {3}に{4}度 距離:{5}mm タイヤ回転:{6}\n".format(RobotCounter, NewPos[0], NewPos[1], RobotDirection, 0, RobotMillage, TireRotation))
+        try:
+            C_TextEntry1.AppendText("{0}: X:{1} Y:{2} {3}に{4}度 距離:{5}mm タイヤ回転:{6}\n".format(RobotCounter, NewPos[0], NewPos[1], RobotDirection, 0, RobotMillage, TireRotation))
+
+        except:
+            Debug("[Info] ControlPanel has been dead.")
 
         Debug("RobotCounter: {0}".format(RobotCounter))
         Debug("RobotMillage: {0}".format(RobotMillage))
@@ -637,6 +692,7 @@ class MainWindow(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.OnlineUserGuide, id=8)
         #self.Bind(wx.EVT_MENU, self.OfflineUserGuide, id=9)
+        self.Bind(wx.EVT_MENU, self.CheckUpdate, id=10)
         FileMenu4.AppendSeparator()
 
         FileMenu4.Append(11, 'このソフトウェアについて(&A)', 'このソフトウェアの情報を表示します')
@@ -658,7 +714,23 @@ class MainWindow(wx.Frame):
 
         #コート画像読み込みと貼り付け
         CourtImage = wx.Image(CourtImagePath)
-        CI_Size = CourtImage.GetSize() #1920x1080用の画像で読み込み
+
+        try:
+            os.remove(CourtImagePath)
+            
+        except:
+            Debug("[Error] Could not delete CourtImage.")
+
+        #エラー対策
+        try:
+            CI_Size = CourtImage.GetSize() #1920x1080用の画像で読み込み
+
+        except Exception as e:
+            wx.MessageDialog(None, "回復不能なエラーが発生しました。ソフトウェアを再インストールしてください。\n[Error: CourtImage in the package is missing or corrupt.]", TitleName, style=wx.ICON_ERROR).ShowModal()
+            Debug("[Error] Default package is damaged.")
+            Debug(e)
+            sys.exit()
+
         Debug("CourtImageSize: {0}".format(CI_Size))
 
         #コート画像縦横比計算
