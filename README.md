@@ -64,6 +64,10 @@ Unauthorized downloading, modification, or redistribution of this software is pr
 ・Configを使用し設定変更可能  
 ・コントロールパネルで視覚的な操作  
 
+# 既知のバグ・仕様  
+・コート画像が正しいサイズで表示されない  
+・ロボット画像が正しく表示されない（動作は正常）  
+
 
 # アップデート履歴  
 ### 説明
