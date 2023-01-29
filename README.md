@@ -64,10 +64,6 @@ Unauthorized downloading, modification, or redistribution of this software is pr
 ・Configを使用し設定変更可能  
 ・コントロールパネルで視覚的な操作  
 
-# 既知のバグ・仕様  
-・コート画像が正しいサイズで表示されない  
-・ロボット画像が正しく表示されない（動作は正常）  
-
 
 # アップデート履歴  
 ### 説明
@@ -79,7 +75,7 @@ Unauthorized downloading, modification, or redistribution of this software is pr
 - [x] **v3.0.0α-Dev1** システム作成
 - [x] **v3.0.0α-Dev2** ツールバー作成
 - [x] **v3.0.0α-Dev3** ツールバー作成
-- [x] **v3.0.0α-Dev4** 解像度・比率に合わせた拡大縮小機能追加、TkinterのDialog→wxPythonのDialogへ移行
+- [x] **v3.0.0α-Dev4** 解像度・比率に合わせた拡大縮小機能追加、TkinterからwxPythonへ移行
 - [x] **v3.0.0α-Dev4a** 細部の修正
 - [x] **v3.0.0α-Dev5** 挙動関数作成、Config一部対応、DebugLog出力機能追加
 - [x] **v3.0.0α-Dev5a** コート画像貼り付け機能追加（試験的）、ツールバーショートカットキー追加
@@ -90,7 +86,8 @@ Unauthorized downloading, modification, or redistribution of this software is pr
 - [x] **v3.0.0α-Dev10** コントールパネルウィンドウ作成、ロボット走行距離表示（Config指定可能）機能追加、Config項目追加  
 - [x] **v3.0.0α-Dev11** ライブラリを使用したプログラム変換機能作成（現在はev3devのみ対応・仮）、ロボット回転角度計算追加（未実装）
 - [x] **v3.0.0α-Dev12** プログラムの名前を付けて保存機能実装、ロボット画像の描画システム実装（簡易）、ロボット位置と画像全削除機能実装、ev3devライブラリの修正（v1.0.1）
-- [x] **v3.0.0α-Dev13** .ncpへの対応、エラー対策機能修正、
+- [x] **v3.0.0α-Dev13** .ncpへの対応、エラー対策機能修正  
+- [x] **v3.0.0α-Dev13a** 細かなバグ修正  
 - [ ] **v3.0.0α-Dev14** コントロールパネル機能ボタン作成  
 - [ ] **v3.0.0** 公式リリース
 - [ ] **v3.1.0** ロボット画像変更機能追加

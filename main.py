@@ -16,7 +16,7 @@ import csv #.nrpファイル（csv）用
 
 #変数定義群
 TitleName = "NavigationEV3 ReWrite" #タイトル名
-Version = "3.0.0α-Dev13" #バージョン
+Version = "3.0.0α-Dev13a" #バージョン
 Developer = "© 2020-2023 Kenta Sui"
 
 DisplayMax = [1920, 1080]
@@ -344,6 +344,10 @@ class MainWindow(wx.Frame):
         wx.MessageDialog(None, "プログラムファイルを\n{0}\nに保存しました。".format(SaveFilePath), TitleName).ShowModal()
         SaveFileDialog.Destroy()
 
+    #1つ戻る
+    def UndoRobot(self, event):
+        wx.MessageDialog(None, "未実装です", TitleName).ShowModal()
+    
     #全削除
     def AllRobotsClear(self, event):
         global RobotCounter, RobotMillageDatas, RobotImages
@@ -671,6 +675,7 @@ class MainWindow(wx.Frame):
         Menubar.Append(FileMenu2, '編集(&E)')
         self.SetMenuBar(Menubar)
 
+        self.Bind(wx.EVT_MENU, self.UndoRobot, id=6)
         self.Bind(wx.EVT_MENU, self.AllRobotsClear, id=7)
         self.Bind(wx.EVT_MENU, self.ControlPanel, id=12)
 
