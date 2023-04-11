@@ -50,8 +50,10 @@ Pillow==9.3.0
 wxPython==4.2.0  
 
 ## ライセンス
-このソフトウェアを無断でダウンロード・改変・再配布をすることは禁止されています。  
-Unauthorized downloading, modification, or redistribution of this software is prohibited.  
+このソフトウェアを無断で改変・再配布をすることは禁止されています。  
+トラブル防止の為、WROやFLLなど、LEGO Mindstormsを利用した大会出場を目的とした利用も禁止しています。  
+Unauthorized modification or redistribution of this software is prohibited.  
+To prevent problems, the use of LEGO Mindstorms for the purpose of competing in competitions using LEGO Mindstorms, such as WRO and FLL, is also prohibited.  
 
 ## 機能一覧
 ・ロボットを配置するだけで自動で距離と角度を算出  
